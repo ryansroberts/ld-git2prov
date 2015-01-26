@@ -1,0 +1,4 @@
+image: nice/linkeddata-build:latest
+script:
+  - ./.drone/build.sh
+   

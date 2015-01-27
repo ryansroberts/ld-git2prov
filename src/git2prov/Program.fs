@@ -47,7 +47,7 @@ module Prov =
   
   type Uri =
     | Uri of string * string
-    with static member commit c r = Uri ("commit:",short c r)
+    with static member commit r c = Uri ("commit:",short c r)
          static member identity (c:LibGit2Sharp.Commit) = Uri ("identity:",c.Author.Email)
          static member versionedcontent c r = Uri ("versionedcontent:",short c r)
          
@@ -65,7 +65,7 @@ module Prov =
         Content = ""
         PreviousVersion = Some 
         SpecialisationOf = Uri ""
-        Commit = Uri.commit c r
+        Commit = Uri.commit r c
         AttributedTo = Uri ""
         }
       }
@@ -80,12 +80,12 @@ module Prov =
     }
   with static member fromCommit = function
     | Commit c,Commit c',r -> {
-        Id = Uri.commit c r
+        Id = Uri.commit r c
         Time = c.Author.When
         Label = c.Message
         Users = [Uri.identity c]
         Used = FileVersion.fromDiff (diff (c,c') r)
-        InformedBy = c.Parents |> Seq.map (fun c -> Uri ("commit:",short c r)) 
+        InformedBy = c.Parents |> Seq.map (Uri.commit r)
         }
       
 module Main = 

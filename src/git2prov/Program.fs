@@ -48,8 +48,9 @@ module Prov =
   type Uri =
     | Uri of string * string
     with static member commit r c = Uri ("commit:",short c r)
-         static member identity (c:LibGit2Sharp.Commit) = Uri ("identity:",c.Author.Email)
-         static member versionedcontent c r = Uri ("versionedcontent:",short c r)
+         static member identity (c:LibGit2Sharp.Commit) = Uri ("individual:",c.Author.Email)
+         static member versionedcontent c = Uri ("versionedcontent:",c)
+         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri ("individual:",f.Path)
          
   type FileVersion = {
     Id : Uri
@@ -59,23 +60,24 @@ module Prov =
     Commit : Uri
     AttributedTo : Uri
     }
-  with static member fromDiff (c:LibGit2Sharp.Commit) (c':LibGit2Sharp.Commit) (d:LibGit2Sharp.TreeChanges) r = seq {
-      for f in d.Modified do yield {
-        Id = Uri.versionedcontent (LibGit2Sharp.GitObject f.Oid) r 
-        Content = ""
-        PreviousVersion = Some 
-        SpecialisationOf = Uri ""
-        Commit = Uri.commit r c
-        AttributedTo = Uri ""
-        }
+  with static member from (c:LibGit2Sharp.Commit) (c':LibGit2Sharp.Commit) r = seq {
+    let d = diff (c.Tree,c'.Tree) r
+    for f in d.Modified do yield {
+      Id = Uri.versionedcontent f.Oid.Sha  
+      Content = ""
+      PreviousVersion = Some f.OldOid.Sha 
+      SpecialisationOf = Uri.individual (r,f) 
+      Commit = Uri.commit r c
+      AttributedTo = Uri.identity c 
       }
+    }
   
   type Activity = {
     Id : Uri
     Time : DateTimeOffset
     Label : string
     Users : Uri list
-    Used : FileVersion list
+    Used : FileVersion seq
     InformedBy : Uri seq
     }
   with static member fromCommit = function
@@ -84,7 +86,7 @@ module Prov =
         Time = c.Author.When
         Label = c.Message
         Users = [Uri.identity c]
-        Used = FileVersion.fromDiff (diff (c,c') r)
+        Used = FileVersion.from c c' r
         InformedBy = c.Parents |> Seq.map (Uri.commit r)
         }
       

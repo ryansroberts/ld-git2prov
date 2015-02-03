@@ -44,11 +44,11 @@ module Prov =
  
   type Uri =
     | Uri of string * string
-    with static member commit r c = Uri ("commit:",short c r)
-         static member identity (c:LibGit2Sharp.Commit) = Uri ("individual:",c.Author.Email)
-         static member versionedcontent c = Uri ("versionedcontent:",c)
-         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri ("individual:",f.Path)
-         override x.ToString () = match x with | Uri (p,s) -> sprintf "%s:%s" p s 
+    with static member commit r c = Uri ("",sprintf "commit-%s" (short c r))
+         static member identity (c:LibGit2Sharp.Commit) = Uri ("",sprintf "user-%s" c.Author.Email)
+         static member versionedcontent c = Uri ("",sprintf "file-%s" c)
+         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri ("",f.Path)
+         override x.ToString () = match x with | Uri (p,s) -> sprintf "base:%s" s 
          
   type FileVersion = {
     Id : Uri
@@ -98,10 +98,15 @@ module TTL =
     let prov = "http://www.w3.org/ns/prov#"
     let owl = "http://www.w3.org/2002/07/owl#"
     let bas = "http://nice.org.uk/ns/prov#"
-    
-  
-  let fromActivity (act:Activity) =
-    use g = new Graph ()
+
+    let add (g:IGraph) =
+      g.BaseUri <- UriFactory.Create bas
+      g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
+      g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
+      g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
+      
+  let fromActivity  (g:IGraph) (act:Activity) =
+   
     let literal s =
       g.CreateLiteralNode s :> INode
 
@@ -128,7 +133,8 @@ module TTL =
         
     let blank px = 
       let b = g.CreateBlankNode ()
-      triples (qn b.InternalID,px)
+      
+      triples (b,px)
       |> ignore
       b :> INode
     
@@ -142,11 +148,12 @@ module TTL =
            (qn "prov:agent",puri act.User)
            (qn "prov:hadRole",literal "author, committer")
         ])
-      ])
+        ]) |> ignore
+    g
 
   let ttl (tw:System.IO.TextWriter) g =
-    let writer = CompressingTurtleWriter()
-    writer.Save (g,tw)
+    let writer = CompressingTurtleWriter (CompressionLevel=3,PrettyPrintMode=true)
+    writer.Save (g,tw) 
       
 module Main = 
   open Nessos.UnionArgParser
@@ -165,15 +172,18 @@ module Main =
   let main argv = 
     let parser = UnionArgParser.Create<Arguments>()
     let args = parser.Parse argv
-
     let repo = repo (args.GetResult (<@ Path @>,defaultValue="."))
+    use fout = new System.IO.StreamWriter (System.Console.OpenStandardOutput())
+    use g = new VDS.RDF.Graph ()
+    TTL.ns.add g
+ 
     repo
     |> commits (args.GetResult (<@ Since @>,defaultValue="HEAD"))
     |> Seq.pairwise
     |> Seq.map (Prov.Activity.fromCommit repo)
-    |> Seq.map TTL.fromActivity
-    |> Seq.map (TTL.ttl (System.IO.StreamWriter (System.Console.OpenStandardOutput())))
-    |> Seq.iter (fun _ -> ()) 
+    |> Seq.map (TTL.fromActivity g)
+    |> Seq.last
+    |> TTL.ttl fout
     
     0// return an integer exit code
 

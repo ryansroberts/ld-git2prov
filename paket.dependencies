@@ -9,5 +9,6 @@ nuget SourceLink.Fake
 nuget LibGit2Sharp
 nuget UnionArgParser
 nuget DotNetRdf
+nuget Suave
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx

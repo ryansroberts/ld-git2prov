@@ -7,7 +7,10 @@ module Git =
     | Commit of LibGit2Sharp.Commit
     
   type Repository =
-  | Repository of LibGit2Sharp.Repository
+    | Repository of LibGit2Sharp.Repository
+
+  type WorkingArea =
+    | WorkingArea of StatusEntry list * Commit
 
   let repo p = Repository  ( new LibGit2Sharp.Repository (p) )
 
@@ -22,6 +25,18 @@ module Git =
     | Commit c -> c.Tree
     | Tail -> null :> LibGit2Sharp.Tree
 
+  let workingArea = function
+    | Repository r ->
+      let s = r.RetrieveStatus ()
+      WorkingArea (Seq.concat [
+        s.Added
+        s.Modified
+        s.Untracked
+        s.Staged
+        s.RenamedInIndex
+        s.RenamedInWorkDir
+       ] |> Seq.toList,Commit r.Head.Tip)
+    
   let diff (c,c') = function
     | Repository r ->
       r.Diff.Compare<TreeChanges>(oldTree=c,newTree=c')
@@ -40,35 +55,42 @@ module Prov =
   let short sha = function
     | Repository r ->
       r.ObjectDatabase.ShortenObjectId sha
-
  
   type Uri =
     | Uri of string 
     with static member commit r c = Uri (sprintf "commit/%s" (short c r))
+         static member workingarea = Uri "workingarea" 
          static member identity (c:LibGit2Sharp.Commit) = Uri (sprintf "user/%s" c.Author.Email)
          static member versionedcontent (c,p) = Uri (sprintf "commit/%s/%s" c p)
-         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri (f.Path)
+         static member individual (r,p) = Uri p
          override x.ToString () = match x with | Uri s -> sprintf "base:%s" s 
          
   type FileVersion = {
     Id : Uri
-    Content : string
     PreviousVersion : string option
     SpecialisationOf : Uri
     Commit : Uri
     AttributedTo : Uri
     }
-  with static member from (c:LibGit2Sharp.Commit) (c':LibGit2Sharp.Commit) r = seq {
-    let d = diff (c.Tree,c'.Tree) r
-    for f in d.Modified do yield {
-      Id = Uri.versionedcontent (f.Oid.Sha,f.Path)  
-      Content = ""
-      PreviousVersion = Some f.OldOid.Sha 
-      SpecialisationOf = Uri.individual (r,f) 
-      Commit = Uri.commit r c
-      AttributedTo = Uri.identity c 
-      }
-    }
+  with static member from (c:LibGit2Sharp.Commit,c':LibGit2Sharp.Commit,r) = seq {
+        let d = diff (c.Tree,c'.Tree) r
+        for f in d.Modified do yield {
+          Id = Uri.versionedcontent (f.Oid.Sha,f.Path)  
+          PreviousVersion = Some f.OldOid.Sha 
+          SpecialisationOf = Uri.individual (r,f.Path) 
+          Commit = Uri.commit r c
+          AttributedTo = Uri.identity c 
+          }
+        }
+       static member from (wx:LibGit2Sharp.StatusEntry list,r) = seq {
+         for f in wx do yield {
+           Id = Uri f.FilePath
+           PreviousVersion = None
+           SpecialisationOf = Uri.individual (r,f.FilePath)
+           Commit = Uri.workingarea
+           AttributedTo = Uri System.Environment.UserName
+         }
+       } 
   
   type Activity = {
     Id : Uri
@@ -76,17 +98,26 @@ module Prov =
     Label : string
     User : Uri
     Used : FileVersion seq
-    InformedBy : Uri seq
+    InformedBy : Uri list 
     }
   with static member fromCommit r = function
-    | Commit c,Commit c' -> {
-        Id = Uri.commit r c
-        Time = c.Author.When
-        Label = c.Message
-        User = Uri.identity c
-        Used = FileVersion.from c c' r
-        InformedBy = c.Parents |> Seq.map (Uri.commit r)
-        }
+        | Commit c,Commit c' -> {
+            Id = Uri.commit r c
+            Time = c.Author.When
+            Label = c.Message
+            User = Uri.identity c
+            Used = FileVersion.from (c,c',r)
+            InformedBy = [for p in c.Parents -> Uri.commit r p]
+          }
+       static member fromWorkingArea r = function
+        | WorkingArea (wx,Commit c) -> {
+            Id = Uri.workingarea
+            Time = DateTimeOffset.Now
+            Label = "Uncommitted changes in working area"
+            User = Uri System.Environment.UserName
+            Used = FileVersion.from (wx,r)
+            InformedBy = [Uri.commit r c]
+          } 
 
 module TTL =
   open Prov
@@ -155,6 +186,9 @@ module TTL =
            (qn "prov:hadRole",literal "author, committer")
            ])
         ])
+    
+    for i in act.InformedBy do
+      triples (puri act.Id,[qn "prov:informedBy",puri i])
 
     for u in act.Used do
       triples (puri act.Id,[qn "prov:uses",puri u.Id])
@@ -175,31 +209,42 @@ module Main =
   open Git
   
   type Arguments =
+    | WorkingArea of bool
     | BaseUri of string
     | Path of string
     | Since of string
   with interface IArgParserTemplate with
     member s.Usage =
       match s with
+        | WorkingArea b -> "Show prov activity for uncommitted and staged "
         | BaseUri s -> "Base uri for generated provenence"
         | Path p -> "Path to a git repository"
         | Since r -> "Commit ref to generate PROV from"
         
   [<EntryPoint>]
   let main argv = 
-    let parser = UnionArgParser.Create<Arguments>()
+    let parser = UnionArgParser.Create<Arguments> ()
     let args = parser.Parse argv
     let repo = repo (args.GetResult (<@ Path @>,defaultValue="."))
-    use fout = new System.IO.StreamWriter (System.Console.OpenStandardOutput())
+    use fout = new System.IO.StreamWriter (System.Console.OpenStandardOutput ())
     use g = new VDS.RDF.Graph ()
+
     TTL.ns.add (g,repo) 
-    repo
-    |> commits (args.GetResult (<@ Since @>,defaultValue="HEAD"))
-    |> Seq.pairwise
-    |> Seq.map (Prov.Activity.fromCommit repo)
-    |> Seq.map (TTL.fromActivity g)
-    |> Seq.last
-    |> TTL.ttl fout
+
+    let showWorkingArea ax = seq {
+      match args.GetResult (<@ WorkingArea @>,defaultValue=false) with
+      | true -> yield Prov.Activity.fromWorkingArea repo (Git.workingArea repo)
+      | false -> ()
+
+      yield! ax
+    }
+    repo |> commits (args.GetResult (<@ Since @>,defaultValue="HEAD"))
+         |> Seq.pairwise
+         |> Seq.map (Prov.Activity.fromCommit repo)
+         |> showWorkingArea
+         |> Seq.map (TTL.fromActivity g)
+         |> Seq.last
+         |> TTL.ttl fout
     
     0// return an integer exit code
 

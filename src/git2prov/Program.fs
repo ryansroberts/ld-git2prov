@@ -43,12 +43,12 @@ module Prov =
 
  
   type Uri =
-    | Uri of string * string
-    with static member commit r c = Uri ("",sprintf "commit-%s" (short c r))
-         static member identity (c:LibGit2Sharp.Commit) = Uri ("",sprintf "user-%s" c.Author.Email)
-         static member versionedcontent c = Uri ("",sprintf "file-%s" c)
-         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri ("",f.Path)
-         override x.ToString () = match x with | Uri (p,s) -> sprintf "base:%s" s 
+    | Uri of string 
+    with static member commit r c = Uri (sprintf "commit/%s" (short c r))
+         static member identity (c:LibGit2Sharp.Commit) = Uri (sprintf "user/%s" c.Author.Email)
+         static member versionedcontent (c,p) = Uri (sprintf "commit/%s/%s" c p)
+         static member individual (r,f:LibGit2Sharp.TreeEntryChanges) = Uri (f.Path)
+         override x.ToString () = match x with | Uri s -> sprintf "base:%s" s 
          
   type FileVersion = {
     Id : Uri
@@ -61,7 +61,7 @@ module Prov =
   with static member from (c:LibGit2Sharp.Commit) (c':LibGit2Sharp.Commit) r = seq {
     let d = diff (c.Tree,c'.Tree) r
     for f in d.Modified do yield {
-      Id = Uri.versionedcontent f.Oid.Sha  
+      Id = Uri.versionedcontent (f.Oid.Sha,f.Path)  
       Content = ""
       PreviousVersion = Some f.OldOid.Sha 
       SpecialisationOf = Uri.individual (r,f) 
@@ -90,6 +90,7 @@ module Prov =
 
 module TTL =
   open Prov
+  open Git
   open VDS.RDF
   open VDS.RDF.Writing
 
@@ -99,11 +100,16 @@ module TTL =
     let owl = "http://www.w3.org/2002/07/owl#"
     let bas = "http://nice.org.uk/ns/prov#"
 
-    let add (g:IGraph) =
-      g.BaseUri <- UriFactory.Create bas
-      g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
-      g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
-      g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
+    let add (g:IGraph,r) =
+      match r with
+        | Repository r ->
+          let name = System.IO.Path.GetDirectoryName r.Info.WorkingDirectory 
+          let tree = r.Head.TrackedBranch.Name
+          let bas = sprintf "%s/tree/%s/" name tree  
+          g.BaseUri <- UriFactory.Create bas
+          g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
+          g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
+          g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
       
   let fromActivity  (g:IGraph) (act:Activity) =
    
@@ -129,7 +135,7 @@ module TTL =
         |> List.map (function | (p,o) -> Triple (s,p,o))
         |> g.Assert
         |> ignore
-        g
+        ()
         
     let blank px = 
       let b = g.CreateBlankNode ()
@@ -137,7 +143,7 @@ module TTL =
       triples (b,px)
       |> ignore
       b :> INode
-    
+
     triples (puri act.Id,[
         (a,qn "prov:Activity")
         (qn "prov:startedAtTime",date act.Time)
@@ -147,8 +153,17 @@ module TTL =
            (a,qn "prov:Association")
            (qn "prov:agent",puri act.User)
            (qn "prov:hadRole",literal "author, committer")
+           ])
         ])
-        ]) |> ignore
+
+    for u in act.Used do
+      triples (puri act.Id,[qn "prov:uses",puri u.Id])
+      triples (puri u.Id,[
+        (a, qn "prov:Entity")
+        (qn "prov:wasGeneratedBy",puri u.Commit)
+        (qn "prov:wasAttributedTo",puri u.AttributedTo)
+        (qn "prov:specializationOf",puri u.SpecialisationOf)
+        ])
     g
 
   let ttl (tw:System.IO.TextWriter) g =
@@ -160,11 +175,13 @@ module Main =
   open Git
   
   type Arguments =
+    | BaseUri of string
     | Path of string
     | Since of string
   with interface IArgParserTemplate with
     member s.Usage =
       match s with
+        | BaseUri s -> "Base uri for generated provenence"
         | Path p -> "Path to a git repository"
         | Since r -> "Commit ref to generate PROV from"
         
@@ -175,8 +192,7 @@ module Main =
     let repo = repo (args.GetResult (<@ Path @>,defaultValue="."))
     use fout = new System.IO.StreamWriter (System.Console.OpenStandardOutput())
     use g = new VDS.RDF.Graph ()
-    TTL.ns.add g
- 
+    TTL.ns.add (g,repo) 
     repo
     |> commits (args.GetResult (<@ Since @>,defaultValue="HEAD"))
     |> Seq.pairwise

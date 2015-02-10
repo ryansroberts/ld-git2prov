@@ -9,6 +9,7 @@ module TTL
     let prov = "http://www.w3.org/ns/prov#"
     let owl = "http://www.w3.org/2002/07/owl#"
     let bas = "http://nice.org.uk/ns/prov#"
+    let cnt = "http://www.w3.org/2011/content#"
 
     let add (g:IGraph,r) =
       match r with
@@ -20,8 +21,9 @@ module TTL
           g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
           g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
           g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
+          g.NamespaceMap.AddNamespace ("cnt",UriFactory.Create cnt)
       
-  let fromActivity  (g:IGraph) (act:Activity) =
+  let fromActivity includeContent (g:IGraph) (act:Activity) =
    
     let literal s =
       g.CreateLiteralNode s :> INode
@@ -76,7 +78,12 @@ module TTL
         (qn "prov:wasGeneratedBy",puri u.Commit)
         (qn "prov:wasAttributedTo",puri u.AttributedTo)
         (qn "prov:specializationOf",puri u.SpecialisationOf)
+                                  
         ])
+      match u.Content,includeContent with
+        | Content.Text t, true ->
+          triples (puri u.Id,[(qn "cnt:chars",literal t)])
+        | _,_ -> ()
     g
 
   let ttl (tw:System.IO.TextWriter) g =

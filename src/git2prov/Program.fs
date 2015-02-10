@@ -35,7 +35,7 @@ let writeProv r showWorking includeContent since =
       |> Seq.pairwise
       |> Seq.map (Prov.Activity.fromCommit r)
       |> showWorkingArea
-      |> Seq.map (TTL.fromActivity g)
+      |> Seq.map (TTL.fromActivity includeContent g)
       |> Seq.last
       |> TTL.ttl fout
     ()

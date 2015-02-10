@@ -6,7 +6,7 @@ nuget NUnit.Runners
 nuget Nuget.CommandLine
 nuget FAKE
 nuget SourceLink.Fake
-nuget LibGit2Sharp
+nuget LibGit2Sharp = 0.20.2
 nuget UnionArgParser
 nuget DotNetRdf
 nuget Suave

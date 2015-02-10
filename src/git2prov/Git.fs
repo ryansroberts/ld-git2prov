@@ -1,6 +1,7 @@
 module Git
   open LibGit2Sharp
-
+  open System.IO
+  
   type Commit =
     | Commit of LibGit2Sharp.Commit
     
@@ -10,12 +11,16 @@ module Git
   type WorkingArea =
     | WorkingArea of StatusEntry list * Commit
 
+  type Content =
+    | Text of string
+    | NoContent 
+
   let repo p = Repository  ( new LibGit2Sharp.Repository (p) )
 
   let commits t (r:Repository) =
     match r with
     | Repository r -> seq {
-        for c in r.Commits.QueryBy (LibGit2Sharp.CommitFilter (SortBy=LibGit2Sharp.CommitSortStrategies.Topological,Since=t)) do
+        for c in r.Commits.QueryBy (CommitFilter (SortBy=CommitSortStrategies.Topological,Since=t)) do
         yield Commit c
        }
     
@@ -47,3 +52,14 @@ module Git
       |> Seq.pairwise
       |> Seq.map diff
  
+  let content (h:string) p = function
+    | Repository r -> 
+      let c = r.Lookup<LibGit2Sharp.Commit> h
+      match c.[p] with
+        | null -> NoContent
+        | tr ->
+          match tr.TargetType with
+            | LibGit2Sharp.TreeEntryTargetType.Blob ->
+              let b = tr.Target :?> LibGit2Sharp.Blob
+              use r = new StreamReader(b.GetContentStream())
+              Text (r.ReadToEnd ())

@@ -17,6 +17,7 @@ module Prov
          
   type FileVersion = {
     Id : Uri
+    Content: Git.Content
     PreviousVersion : string option
     SpecialisationOf : Uri
     Commit : Uri
@@ -25,7 +26,8 @@ module Prov
   with static member from (c:LibGit2Sharp.Commit,c':LibGit2Sharp.Commit,r) = seq {
         let d = diff (c.Tree,c'.Tree) r
         for f in d.Modified do yield {
-          Id = Uri.versionedcontent (f.Oid.Sha,f.Path)  
+          Id = Uri.versionedcontent (f.Oid.Sha,f.Path)
+          Content = Git.content c.Id.Sha f.Path r
           PreviousVersion = Some f.OldOid.Sha 
           SpecialisationOf = Uri.individual (r,f.Path) 
           Commit = Uri.commit r c
@@ -35,6 +37,7 @@ module Prov
        static member from (wx:LibGit2Sharp.StatusEntry list,r) = seq {
          for f in wx do yield {
            Id = Uri f.FilePath
+           Content = Git.Content.Text (System.IO.File.ReadAllText (f.FilePath))
            PreviousVersion = None
            SpecialisationOf = Uri.individual (r,f.FilePath)
            Commit = Uri.workingarea

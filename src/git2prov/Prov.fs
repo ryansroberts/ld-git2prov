@@ -5,10 +5,14 @@ module Prov
   let short sha = function
     | Repository r ->
       r.ObjectDatabase.ShortenObjectId sha
+
+  let iso (date:DateTimeOffset) =
+        date.ToString("o")
  
   type Uri =
     | Uri of string 
     with static member commit r c = Uri (sprintf "git2prov:commit/%s" (short c r))
+         static member compilation = Uri (sprintf "compilation:compilation/%s" (iso System.DateTimeOffset.Now))
          static member workingarea = Uri "git2prov:workingarea" 
          static member identity (c:LibGit2Sharp.Commit) = Uri (sprintf "git2prov:user/%s" c.Author.Email)
          static member identity () = Uri (sprintf "git2prov:user/%s" System.Environment.UserName)
@@ -72,4 +76,15 @@ module Prov
             Used = FileVersion.from (wx,r)
             InformedBy = [Uri.commit r c]
           } 
-
+       static member concat ax = {
+         Id = Uri.compilation
+         Time = DateTimeOffset.Now
+         Label = "Compilation message that is actualy useful"
+         User = Uri.identity ()
+         Used = ax
+            |> Seq.map (fun a -> a.Used)
+            |> Seq.concat
+            |> Seq.groupBy (fun a -> a.SpecialisationOf)
+            |> Seq.map (fun (_,dx) -> dx |> Seq.last)
+         InformedBy = []   
+         }

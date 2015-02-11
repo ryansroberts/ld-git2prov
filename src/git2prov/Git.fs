@@ -29,8 +29,7 @@ let commits t (r:Repository) =
 
 let tree = function
   | Commit c -> c.Tree
-  | Tail -> null :> LibGit2Sharp.Tree
-
+  
 let workingArea = function
   | Repository r ->
     let s = r.RetrieveStatus ()
@@ -81,3 +80,4 @@ let content (h:string) p = function
             let b = tr.Target :?> LibGit2Sharp.Blob
             use r = new StreamReader(b.GetContentStream())
             Text (r.ReadToEnd ())
+          | _ -> NoContent

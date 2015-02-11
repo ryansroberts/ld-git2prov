@@ -12,16 +12,14 @@ module TTL
     let cnt = "http://www.w3.org/2011/content#"
 
     let add (g:IGraph,r) =
-      match r with
-        | Repository r ->
-          let name = System.IO.Path.GetDirectoryName r.Info.WorkingDirectory 
-          let tree = r.Head.TrackedBranch.Name
-          let bas = sprintf "%s/tree/%s/" name tree  
-          g.BaseUri <- UriFactory.Create bas
-          g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
-          g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
-          g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
-          g.NamespaceMap.AddNamespace ("cnt",UriFactory.Create cnt)
+        let name = System.IO.Path.GetDirectoryName ( Git.workingDirectory r ) 
+        let tree = Git.branchName r
+        let bas = sprintf "%s/tree/%s/" name tree  
+        g.BaseUri <- UriFactory.Create bas
+        g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
+        g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
+        g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
+        g.NamespaceMap.AddNamespace ("cnt",UriFactory.Create cnt)
       
   let fromActivity includeContent (g:IGraph) (act:Activity) =
    

@@ -10,14 +10,16 @@ module TTL
     let owl = "http://www.w3.org/2002/07/owl#"
     let bas = "http://nice.org.uk/ns/prov#"
     let cnt = "http://www.w3.org/2011/content#"
+    
 
     let add (g:IGraph,r) =
-        let name = System.IO.Path.GetDirectoryName ( Git.workingDirectory r ) 
+        let name = Git.directoryName ( Git.workingDirectory r) 
         let tree = Git.branchName r
-        let bas = sprintf "%s/tree/%s/" name tree  
         g.BaseUri <- UriFactory.Create bas
+        let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree  
         g.NamespaceMap.AddNamespace ("prov",UriFactory.Create prov)
         g.NamespaceMap.AddNamespace ("owl",UriFactory.Create owl)
+        g.NamespaceMap.AddNamespace ("git2prov",UriFactory.Create git2prov)
         g.NamespaceMap.AddNamespace ("base",UriFactory.Create bas)
         g.NamespaceMap.AddNamespace ("cnt",UriFactory.Create cnt)
       

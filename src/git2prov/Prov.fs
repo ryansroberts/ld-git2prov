@@ -8,12 +8,13 @@ module Prov
  
   type Uri =
     | Uri of string 
-    with static member commit r c = Uri (sprintf "commit/%s" (short c r))
-         static member workingarea = Uri "workingarea" 
-         static member identity (c:LibGit2Sharp.Commit) = Uri (sprintf "user/%s" c.Author.Email)
-         static member versionedcontent (c,p) = Uri (sprintf "commit/%s/%s" c p)
-         static member individual (r,p) = Uri p
-         override x.ToString () = match x with | Uri s -> sprintf "base:%s" s 
+    with static member commit r c = Uri (sprintf "git2prov:commit/%s" (short c r))
+         static member workingarea = Uri "git2prov:workingarea" 
+         static member identity (c:LibGit2Sharp.Commit) = Uri (sprintf "git2prov:user/%s" c.Author.Email)
+         static member identity () = Uri (sprintf "git2prov:user/%s" System.Environment.UserName)
+         static member versionedcontent (c,p) = Uri (sprintf "git2prov:commit/%s/%s" c p)
+         static member specialisationOf (r,p) = Uri (sprintf "base:%s" p)
+         override x.ToString () = match x with | Uri s -> s
          
   type FileVersion = {
     Id : Uri
@@ -29,7 +30,7 @@ module Prov
           Id = Uri.versionedcontent (f.Oid.Sha,f.Path)
           Content = Git.content c.Id.Sha f.Path r
           PreviousVersion = Some f.OldOid.Sha 
-          SpecialisationOf = Uri.individual (r,f.Path) 
+          SpecialisationOf = Uri.specialisationOf (r,f.Path) 
           Commit = Uri.commit r c
           AttributedTo = Uri.identity c 
           }
@@ -39,7 +40,7 @@ module Prov
            Id = Uri f.FilePath
            Content = Git.Content.Text (System.IO.File.ReadAllText (f.FilePath))
            PreviousVersion = None
-           SpecialisationOf = Uri.individual (r,f.FilePath)
+           SpecialisationOf = Uri.specialisationOf (r,f.FilePath)
            Commit = Uri.workingarea
            AttributedTo = Uri System.Environment.UserName
          }
@@ -66,8 +67,8 @@ module Prov
         | WorkingArea (wx,Commit c) -> {
             Id = Uri.workingarea
             Time = DateTimeOffset.Now
-            Label = "Uncommitted changes in working area"
-            User = Uri System.Environment.UserName
+            Label = "Uncommitted changes from working area"
+            User = Uri.identity () 
             Used = FileVersion.from (wx,r)
             InformedBy = [Uri.commit r c]
           } 

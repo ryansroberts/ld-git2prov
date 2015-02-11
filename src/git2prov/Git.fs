@@ -13,7 +13,10 @@ type WorkingArea =
 
 type Content =
   | Text of string
-  | NoContent 
+  | NoContent
+
+type Path =
+  | Path of string
 
 let repo p = Repository  ( new LibGit2Sharp.Repository (p) )
 
@@ -60,7 +63,12 @@ let branchName = function
 
 let workingDirectory = function
   | Repository r ->
-    r.Info.WorkingDirectory
+    Path r.Info.WorkingDirectory
+
+let directoryName = function
+  | Path p ->
+    p.Split (Path.DirectorySeparatorChar)
+    |> Seq.last
 
 let content (h:string) p = function
   | Repository r -> 

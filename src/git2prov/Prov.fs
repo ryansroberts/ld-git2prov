@@ -12,16 +12,12 @@ type Uri =
 | Uri of qname:string * segments:string list * ref:string option
 
     static member commit r c = Uri("git2prov",["commit"],Some (short c r))
-    static member compilation = 
-        Uri ("compilation",["compilation"], Some (iso System.DateTimeOffset.Now))
+    static member compilation = Uri ("compilation",["compilation"], Some (iso System.DateTimeOffset.Now))
     static member workingarea = Uri ("git2prov",["workingarea"],None)
-    static member identity (c : LibGit2Sharp.Commit) = 
-        Uri(sprintf "git2prov:user/%s" c.Author.Email)
-    static member identity() = 
-        Uri(sprintf "git2prov:user/%s" System.Environment.UserName)
-    static member versionedcontent (c, p) = 
-        Uri(sprintf "git2prov:commit/%s/%s" c p)
-    static member specialisationOf (r, p) = Uri(sprintf "base:%s" p)
+    static member identity (c : LibGit2Sharp.Commit) = Uri("git2prov",["user"],Some c.Author.Email)
+    static member identity() = Uri("git2prov",["user"],Some System.Environment.UserName)
+    static member versionedcontent (c, p) = Uri("git2prov",["commit",c],Some p)
+    static member specialisationOf (r, p) = Uri("base",[p],None)
     override x.ToString() = 
         match x with
         | Uri (q,p,Some r) -> sprintf "%s:%s%s" q (p |> List.reduce (++)) r

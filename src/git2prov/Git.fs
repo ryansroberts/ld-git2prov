@@ -46,7 +46,7 @@ let workingArea =
                  [ s.Added; s.Modified; s.Untracked; s.Staged; s.RenamedInIndex; 
                    s.RenamedInWorkDir ] |> Seq.toList, Commit r.Head.Tip)
 let diff (c, c') = function 
-    | Repository r -> r.Diff.Compare<Patch>(oldTree = c, newTree = c')
+    | Repository r -> r.Diff.Compare<TreeChanges>(oldTree = c, newTree = c')
 let diffs cx = function 
     | Repository r -> 
         cx

@@ -10,13 +10,13 @@ let (++) a b = System.IO.Path.Combine(a, b)
 
 type Uri = 
 | Uri of qname:string * segments:string list * ref:string option
-
     static member commit r c = Uri("git2prov",["commit"],Some (short c r))
     static member compilation = Uri ("compilation",["compilation"], Some (iso System.DateTimeOffset.Now))
     static member workingarea = Uri ("git2prov",["workingarea"],None)
     static member identity (c : LibGit2Sharp.Commit) = Uri("git2prov",["user"],Some c.Author.Email)
     static member identity() = Uri("git2prov",["user"],Some System.Environment.UserName)
-    static member versionedcontent (c, p) = Uri("git2prov",["commit",c],Some p)
+    static member versionedcontent (f:LibGit2Sharp.TreeEntryChanges) = Uri ("git2prov",["commit";f.Oid.Sha],Some f.Path)
+    static member workingAreaFile (f:LibGit2Sharp.StatusEntry) = Uri ("git2prov",["workingarea"],Some f.FilePath)
     static member specialisationOf (r, p) = Uri("base",[p],None)
     override x.ToString() = 
         match x with
@@ -34,7 +34,7 @@ type FileVersion =
         seq { 
             let d = diff (c.Tree, c'.Tree) r
             for f in d.Modified do
-                yield { Id = Uri.versionedcontent (f.Oid.Sha, f.Path)
+                yield { Id = Uri.versionedcontent f
                         Content = Git.content c.Id.Sha f.Path r
                         PreviousVersion = Some f.OldOid.Sha
                         SpecialisationOf = Uri.specialisationOf (r, f.Path)
@@ -45,12 +45,12 @@ type FileVersion =
     static member from (wx : LibGit2Sharp.StatusEntry list, r) = 
         seq { 
             for f in wx do
-                yield { Id = Uri f.FilePath
+                yield { Id = Uri.workingAreaFile f
                         Content = Git.unstagedContent f r
                         PreviousVersion = None
                         SpecialisationOf = Uri.specialisationOf (r, f.FilePath)
                         Commit = Uri.workingarea
-                        AttributedTo = Uri System.Environment.UserName }
+                        AttributedTo = Uri.identity () }
         }
 
 type Activity = 

@@ -6,6 +6,7 @@ open System
 let short sha = function 
     | Repository r -> r.ObjectDatabase.ShortenObjectId sha
 let iso (date : DateTimeOffset) = date.ToString("o")
+let (++) a b = System.IO.Path.Combine(a, b)
 
 type Uri = 
     | Uri of string
@@ -50,9 +51,7 @@ type FileVersion =
         seq { 
             for f in wx do
                 yield { Id = Uri f.FilePath
-                        Content = 
-                            Git.Content.Text
-                                (System.IO.File.ReadAllText(f.FilePath))
+                        Content = Git.unstagedContent f r
                         PreviousVersion = None
                         SpecialisationOf = Uri.specialisationOf (r, f.FilePath)
                         Commit = Uri.workingarea

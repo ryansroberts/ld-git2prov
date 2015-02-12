@@ -3,6 +3,8 @@ module Git
 open LibGit2Sharp
 open System.IO
 
+let (++) a b = System.IO.Path.Combine(a, b)
+
 type Commit = 
     | Commit of LibGit2Sharp.Commit
 
@@ -27,8 +29,9 @@ let commits t (r : Repository) =
         seq { 
             for c in r.Commits.QueryBy
                          (CommitFilter
-                              (SortBy = CommitSortStrategies.Topological, 
+                            (SortBy = ( CommitSortStrategies.Topological ||| CommitSortStrategies.Reverse ), 
                                Since = t)) do
+                printfn "%A" c.MessageShort
                 yield Commit c
         }
 
@@ -43,7 +46,7 @@ let workingArea =
                  [ s.Added; s.Modified; s.Untracked; s.Staged; s.RenamedInIndex; 
                    s.RenamedInWorkDir ] |> Seq.toList, Commit r.Head.Tip)
 let diff (c, c') = function 
-    | Repository r -> r.Diff.Compare<TreeChanges>(oldTree = c, newTree = c')
+    | Repository r -> r.Diff.Compare<Patch>(oldTree = c, newTree = c')
 let diffs cx = function 
     | Repository r -> 
         cx
@@ -71,3 +74,8 @@ let content (h : string) p = function
                 use r = new StreamReader(b.GetContentStream())
                 Text(r.ReadToEnd())
             | _ -> NoContent
+let unstagedContent (f : LibGit2Sharp.StatusEntry) = function 
+    | Repository r -> 
+        try 
+            Content.Text(System.IO.File.ReadAllText(r.Info.Path ++ f.FilePath))
+        with :? System.IO.IOException -> Content.NoContent

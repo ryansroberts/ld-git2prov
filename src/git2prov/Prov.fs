@@ -9,13 +9,12 @@ let iso (date : DateTimeOffset) = date.ToString("o")
 let (++) a b = System.IO.Path.Combine(a, b)
 
 type Uri = 
-    | Uri of string
-    static member commit r c = Uri(sprintf "git2prov:commit/%s" (short c r))
+| Uri of qname:string * segments:string list * ref:string option
+
+    static member commit r c = Uri("git2prov",["commit"],Some (short c r))
     static member compilation = 
-        Uri
-            (sprintf "compilation:compilation/%s" 
-                 (iso System.DateTimeOffset.Now))
-    static member workingarea = Uri "git2prov:workingarea"
+        Uri ("compilation",["compilation"], Some (iso System.DateTimeOffset.Now))
+    static member workingarea = Uri ("git2prov",["workingarea"],None)
     static member identity (c : LibGit2Sharp.Commit) = 
         Uri(sprintf "git2prov:user/%s" c.Author.Email)
     static member identity() = 
@@ -25,8 +24,8 @@ type Uri =
     static member specialisationOf (r, p) = Uri(sprintf "base:%s" p)
     override x.ToString() = 
         match x with
-        | Uri s -> s
-
+        | Uri (q,p,Some r) -> sprintf "%s:%s%s" q (p |> List.reduce (++)) r
+        | Uri (q,p,None) -> sprintf "%s:%s" q (p |> List.reduce (++))
 type FileVersion = 
     { Id : Uri
       Content : Git.Content

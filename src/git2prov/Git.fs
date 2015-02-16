@@ -29,9 +29,8 @@ let commits t (r : Repository) =
         seq { 
             for c in r.Commits.QueryBy
                          (CommitFilter
-                            (SortBy = ( CommitSortStrategies.Topological ||| CommitSortStrategies.Reverse ), 
-                               Since = t)) do
-                printfn "%A" c.MessageShort
+                            (SortBy = ( CommitSortStrategies.Topological ||| CommitSortStrategies.Reverse ) 
+                               )) do
                 yield Commit c
         }
 

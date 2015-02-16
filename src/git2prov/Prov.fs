@@ -20,8 +20,8 @@ type Uri =
     static member specialisationOf (r, p) = Uri("base",[p],None)
     override x.ToString() = 
         match x with
-        | Uri (q,p,Some r) -> sprintf "%s:%s%s" q (p |> List.reduce (++)) r
-        | Uri (q,p,None) -> sprintf "%s:%s" q (p |> List.reduce (++))
+        | Uri (q,p,Some r) -> sprintf "%s:/%s/%s" q (p |> List.reduce (++)) r
+        | Uri (q,p,None) -> sprintf "%s:/%s" q (p |> List.reduce (++))
 type FileVersion = 
     { Id : Uri
       Content : Git.Content

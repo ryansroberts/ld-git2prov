@@ -1,6 +1,9 @@
 NUGET
   remote: https://nuget.org/api/v2
   specs:
+    ApprovalTests (3.0.8)
+      ApprovalUtilities
+    ApprovalUtilities (3.0.8)
     dotNetRDF (1.0.7.3471)
       HtmlAgilityPack (>= 1.4.9) - >= net35, >= net35, >= net40, >= net40
       Newtonsoft.Json (>= 6.0.6)
@@ -24,7 +27,6 @@ NUGET
       Microsoft.Bcl.Build (>= 1.0.14)
     Newtonsoft.Json (6.0.8)
     NuGet.CommandLine (2.8.3)
-    NUnit (2.6.4)
     NUnit.Runners (2.6.4)
     Octokit (0.6.2)
       Microsoft.Net.Http
@@ -34,6 +36,8 @@ NUGET
       FsPickler (>= 1.0.7)
     UnionArgParser (0.8.5)
     VDS.Common (1.4.0)
+    xunit (1.9.2)
+    xunit.runners (1.9.2)
 GITHUB
   remote: fsharp/FAKE
   specs:

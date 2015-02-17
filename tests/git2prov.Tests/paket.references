@@ -1,2 +1,5 @@
-NUnit
 NUnit.Runners
+ApprovalTests
+UnionArgParser
+XUnit
+XUnit.Runners

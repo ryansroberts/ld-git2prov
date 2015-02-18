@@ -1,49 +1,11 @@
-module RDF
+module Translate
 
+open common.RDF
 open Prov
 open Git
 open VDS.RDF
 open VDS.RDF.Writing
-
-module ns = 
-  let prov = "http://www.w3.org/ns/prov#"
-  let owl = "http://www.w3.org/2002/07/owl#"
-  let bas = "http://nice.org.uk/ns/prov#"
-  let cnt = "http://www.w3.org/2011/content#"
-  let compilation = "http://nice.org.uk/ns/compilation#"
   
-  let add (g : IGraph, r) = 
-    let name = Git.directoryName (Git.workingDirectory r)
-    let tree = Git.branchName r
-    g.BaseUri <- UriFactory.Create bas
-    let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree
-    g.NamespaceMap.AddNamespace("prov", UriFactory.Create prov)
-    g.NamespaceMap.AddNamespace("owl", UriFactory.Create owl)
-    g.NamespaceMap.AddNamespace("git2prov", UriFactory.Create git2prov)
-    g.NamespaceMap.AddNamespace("base", UriFactory.Create bas)
-    g.NamespaceMap.AddNamespace("compilation", UriFactory.Create bas)
-    g.NamespaceMap.AddNamespace("cnt", UriFactory.Create cnt)
-
-let literal (g : IGraph) s = g.CreateLiteralNode s :> INode
-let uri (g : IGraph) u = UriFactory.Create u |> g.CreateUriNode :> INode
-let puri (g : IGraph) (u : Prov.Uri) = g.CreateUriNode(string u) :> INode
-let qn (g : IGraph) (qn : string) = g.CreateUriNode qn :> INode
-let a (g : IGraph) = qn g "rdf:type"
-let date (g : IGraph) (d : System.DateTimeOffset) = 
-  LiteralExtensions.ToLiteral(d, g) :> INode
-let triples (g : IGraph) = function 
-  | (s, px) -> 
-    px
-    |> List.map (function 
-         | (p, o) -> Triple(s, p, o))
-    |> g.Assert
-    |> ignore
-    ()
-
-let blank (g : IGraph) px = 
-  let b = g.CreateBlankNode()
-  triples g (b, px) |> ignore
-  b :> INode
 
 let provHistory includeContent (g : IGraph) (act : Activity) = 
   let triples = triples g

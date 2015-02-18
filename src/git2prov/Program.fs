@@ -1,6 +1,7 @@
 module Main
 
 open Nessos.UnionArgParser
+open common
 
 type Arguments = 
   | Server of int
@@ -39,20 +40,28 @@ let gatherProv r includeWorking since =
   |> Seq.map (Prov.Activity.fromCommit r)
   |> includeWorkingArea
 
+
+let branchNs (g : VDS.RDF.IGraph, r) = 
+    let name = Git.directoryName (Git.workingDirectory r)
+    let tree = Git.branchName r
+    let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree
+    g.NamespaceMap.AddNamespace("tree", VDS.RDF.UriFactory.Create git2prov)
+
 let writeProv repo showContent showHistory showCompilation prov = 
   use fout = new System.IO.StreamWriter(System.Console.OpenStandardOutput())
   use g = new VDS.RDF.Graph()
-  RDF.ns.add (g, repo)
+  RDF.ns.add (g, RDF.ns.git2prov)
+  branchNs (g,repo)
   let history() = 
     prov
-    |> Seq.map (RDF.provHistory showContent g)
+    |> Seq.map (Translate.provHistory showContent g)
     |> Seq.last
     |> ignore
   
   let compilation() = 
     prov
     |> Prov.Activity.concat
-    |> RDF.provCompilation g
+    |> Translate.provCompilation g
     |> ignore
   
   match showHistory, showCompilation with
@@ -61,7 +70,7 @@ let writeProv repo showContent showHistory showCompilation prov =
   match showCompilation with
   | true -> compilation()
   | false -> ()
-  g |> RDF.ttl fout
+  g |> Translate.ttl fout
   ()
 
 [<EntryPoint>]

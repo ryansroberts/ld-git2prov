@@ -1,14 +1,20 @@
 module Tests
-open ApprovalTests
 open Xunit
 open System.Diagnostics 
 open Nessos.UnionArgParser
 open Main
 open System.IO
+open common.RDF
+ 
+let pathToExpectations= "../tests/git2prov.tests/expected/"
 
 type Approve () = class end
-    with static member string (s:string) =
-      Approvals.Verify s
+with static member graph (expectedName:string) (ttl:System.IO.Stream) =
+  let g = Store.loadFile (pathToExpectations ++ (sprintf "%s.ttl" expectedName))
+  let g' = Store.loadTtl ttl
+
+  let diff = Store.diff g g'
+  Assert.True (diff.AreEqual,string diff)
 
 let clone repo =
   let dir = sprintf "Examples/%s" repo        
@@ -16,7 +22,6 @@ let clone repo =
   
   let ps = Process.Start ("git",sprintf "clone ../tests/git2prov.Tests/Examples/%s" repo)
   ps.WaitForExit()
-  repo
 
 
 let g2p args =
@@ -28,17 +33,39 @@ let g2p args =
                               Arguments=args,
                               RedirectStandardOutput=true)
   let ps = Process.Start psi
-  let os = ps.StandardOutput.ReadToEnd()
-  ps.WaitForExit(100) |> ignore
-  os
+  ps.StandardOutput.BaseStream
  
   
 [<Fact>]
-let ``Show changes from HEAD`` () =
-  clone "testrepo.git"
+let ``There are no changes from HEAD to HEAD`` () =
+  clone "testrepo"
+  g2p [Main.Path "testrepo"
+       ShowHistory
+       Since "HEAD"]
+  |> Approve.graph "HEADtoHEAD"
+  
+[<Fact>]
+let ``Changes from HEAD to hash of previous commit`` () =
+  clone "testrepo"
+  g2p [Main.Path "testrepo"
+       ShowHistory
+       Since "be3563a"]
+  |> Approve.graph "HEADtobe3"
+  
+[<Fact>]
+let ``Changes from HEAD to alias of previous commit`` () =
+  clone "testrepo"
   g2p [Main.Path "testrepo"
        ShowHistory
        Since "HEAD~1"]
-  |> Approve.string
-  
- 
+  |> Approve.graph "HEADtohead-1"
+
+[<Fact>]
+let ``Changes for all history`` () =
+  clone "testrepo"
+  g2p [Main.Path "testrepo"
+       ShowHistory]
+  |> Approve.graph "AllHistory"
+
+
+

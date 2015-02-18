@@ -1,15 +1,13 @@
 module Prov
-
 open Git
-open System
+open common.RDF
 
 let short sha = function 
   | Repository r -> r.ObjectDatabase.ShortenObjectId sha
-let iso (date : DateTimeOffset) = date.ToString("o")
+let iso (date : System.DateTimeOffset) = date.ToString("o")
 let (++) a b = System.IO.Path.Combine(a, b)
 
-type Uri = 
-  | Uri of qname : string * segments : string list * ref : string option
+type Uri with  
   static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
   static member compilation = 
     Uri("compilation", [ "compilation" ], Some(iso System.DateTimeOffset.Now))
@@ -23,10 +21,6 @@ type Uri =
   static member workingAreaFile (f : LibGit2Sharp.StatusEntry) = 
     Uri("git2prov", [ "workingarea" ], Some f.FilePath)
   static member specialisationOf (r, p) = Uri("base", [ p ], None)
-  override x.ToString() = 
-    match x with
-    | Uri(q, p, Some r) -> sprintf "%s:/%s/%s" q (p |> List.reduce (++)) r
-    | Uri(q, p, None) -> sprintf "%s:/%s" q (p |> List.reduce (++))
 
 type FileVersion = 
   { Id : Uri
@@ -61,7 +55,7 @@ type FileVersion =
 
 type Activity = 
   { Id : Uri
-    Time : DateTimeOffset
+    Time : System.DateTimeOffset
     Label : string
     User : Uri
     Used : FileVersion seq
@@ -78,15 +72,15 @@ type Activity =
   static member fromWorkingArea r = function 
     | WorkingArea(wx, Commit c) -> 
       { Id = Uri.workingarea
-        Time = DateTimeOffset.Now
+        Time = System.DateTimeOffset.Now
         Label = "Uncommitted changes from working area"
         User = Uri.identity()
         Used = FileVersion.from (wx, r)
         InformedBy = [ Uri.commit r c ] }
   static member concat ax = 
     { Id = Uri.compilation
-      Time = DateTimeOffset.Now
-      Label = "Compilation message that is actualy useful"
+      Time = System.DateTimeOffset.Now
+      Label = "Change this to a compilation message that is actualy useful to somebody"
       User = Uri.identity()
       Used = 
         ax

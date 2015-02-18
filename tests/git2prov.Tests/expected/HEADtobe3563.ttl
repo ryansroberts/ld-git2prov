@@ -1,0 +1,23 @@
+@base <http://nice.org.uk/ns/prov#>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix git2prov: <http://nice.org.uk/ns/prov#>.
+@prefix base: <http://nice.org.uk/ns/prov#>.
+@prefix compilation: <http://nice.org.uk/ns/compilation#>.
+@prefix cnt: <http://www.w3.org/2011/content#>.
+@prefix tree: <http://nice.org.uk/git2prov//tree/master>.
+
+_:autos1 a prov:Association;
+         prov:agent <http://nice.org.uk/ns/prov#/user/schacon@gmail.com>;
+         prov:hadRole "author, committer".
+<http://nice.org.uk/ns/prov#/commit/be3563a> a prov:Activity;
+                                             prov:endedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
+                                             prov:informedBy <http://nice.org.uk/ns/prov#/commit/9fd738e>,
+                                                             <http://nice.org.uk/ns/prov#/commit/c47800c>;
+                                             prov:qualifiedAssociation _:autos1;
+                                             prov:startedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
+                                             prov:wasAssociatedWith <http://nice.org.uk/ns/prov#/user/schacon@gmail.com>.

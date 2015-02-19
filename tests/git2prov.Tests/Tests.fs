@@ -16,8 +16,7 @@ let approveGraph (expectedName:string) (ttl:System.IO.Stream) =
   Assert.True (diff.AreEqual,string diff)
 
 let clone repo = 
-    let dir = sprintf "Examples/%s" repo
-    if Directory.Exists dir then Directory.Delete(dir, true)
+    if Directory.Exists repo then Directory.Delete(repo, true)
     let ps = 
         Process.Start
             ("git", sprintf "clone ../tests/git2prov.Tests/examples/%s" repo)
@@ -61,5 +60,6 @@ let ``Changes from HEAD to alias of previous commit``() =
 let ``Changes for all history``() = 
     clone "testrepo"
     g2p [ Main.Path "testrepo"
-          ShowHistory ]
+          ShowHistory
+          Since "8496071"]
     |> approveGraph "AllHistory"

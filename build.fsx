@@ -86,10 +86,13 @@ Target "AssemblyInfo" (fun _ ->
 // Build native 
 Target "Native" 
   (fun _ -> 
-  ignore 
     (Shell.Exec
        ("sh", args = "-c './build.libgit2sharp.sh'", 
-        dir = FileUtils.pwd() + "/lib/libgit2sharp")))
+        dir = FileUtils.pwd() + "/lib/libgit2sharp"))
+    |> ignore
+    !!"lib/libgit2sharp/libgit2/build/*"
+    |> CopyFiles "bin")
+    
 // --------------------------------------------------------------------------------------
 // Clean build results
 Target "Clean" (fun _ -> CleanDirs [ "bin"; "temp" ])

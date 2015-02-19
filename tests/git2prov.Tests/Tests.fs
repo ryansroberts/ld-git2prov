@@ -20,7 +20,7 @@ let clone repo =
     if Directory.Exists dir then Directory.Delete(dir, true)
     let ps = 
         Process.Start
-            ("git", sprintf "clone ../tests/git2prov.Tests/Examples/%s" repo)
+            ("git", sprintf "clone ../tests/git2prov.Tests/examples/%s" repo)
     ps.WaitForExit()
 
 let g2p args = 

@@ -19,6 +19,7 @@ let provHistory includeContent (g : IGraph) (act : Activity) =
                (qn "prov:startedAtTime", date act.Time)
                (qn "prov:endedAtTime", date act.Time)
                (qn "prov:wasAssociatedWith", puri act.User)
+               (qn "rdfs:label", literal act.Label)
                (qn "prov:qualifiedAssociation", 
                 blank [ (a, qn "prov:Association")
                         (qn "prov:agent", puri act.User)
@@ -50,6 +51,7 @@ let provCompilation (g : IGraph) (act : Activity) =
              [ (a, qn "compilation:Compilation")
                (qn "prov:startedAtTime", date act.Time)
                (qn "prov:wasAssociatedWith", puri act.User)
+               (qn "rdfs:label", literal act.Label)
                (qn "prov:qualifiedAssociation", 
                 blank [ (a, qn "prov:Association")
                         (qn "prov:agent", puri act.User)

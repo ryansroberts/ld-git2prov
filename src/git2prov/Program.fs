@@ -42,13 +42,10 @@ let gatherProv r includeWorking since =
             | false -> ()
             yield! ax
     }
-    match Git.commits since r with
-      | cx when hasAtLeast 2 cx  ->
-        cx
-        |> Seq.pairwise
-        |> Seq.map (Prov.Activity.fromCommit r)
-        |> includeWorkingArea
-      | _ -> Seq.empty 
+    Git.commits since r 
+    |> Seq.pairwise
+    |> Seq.map (Prov.Activity.fromCommit r)
+    |> includeWorkingArea
           
 let branchNs (g : VDS.RDF.IGraph, r) = 
     let name = Git.directoryName (Git.workingDirectory r)

@@ -58,7 +58,7 @@ let ``Changes from HEAD to alias of previous commit`` () =
   g2p [Main.Path "testrepo"
        ShowHistory
        Since "HEAD~1"]
-  |> Approve.graph "HEADtohead-1"
+  |> Approve.graph "HEADtoHEAD-1"
 
 [<Fact>]
 let ``Changes for all history`` () =

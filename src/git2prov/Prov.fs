@@ -36,7 +36,7 @@ type FileVersion =
     static member from (c : LibGit2Sharp.Commit, c' : LibGit2Sharp.Commit, r) = 
         seq { 
             let d = diff (c.Tree, c'.Tree) r
-            for f in d.Modified do
+            for f in Seq.concat [d.Modified;d.Added;d.Renamed;d.Copied] do
                 yield { Id = Uri.versionedcontent f
                         Content = Git.content c.Id.Sha f.Path r
                         PreviousVersion = Some f.OldOid.Sha

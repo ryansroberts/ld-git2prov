@@ -28,13 +28,14 @@ let commits (since : string) r =
     | Repository r -> 
         let c = r.Lookup<LibGit2Sharp.Commit>(since)
         let refs = r.Refs.ReachableFrom([ c ])
-        seq {
+        seq { 
             yield Commit c
             for c in r.Commits.QueryBy
                          (CommitFilter
                               (Since = refs, Until = c, 
                                SortBy = (CommitSortStrategies.Topological 
-                               ||| CommitSortStrategies.Reverse))) -> Commit c
+                                         ||| CommitSortStrategies.Reverse))) -> 
+                Commit c
         }
 
 let tree = function 

@@ -26,13 +26,14 @@ type Arguments =
             | Path p -> "Path to a git repository"
             | Since r -> "Commit ref to generate PROV from"
 
-let hasAtLeast n (items:seq<_>) = 
-  use e = items.GetEnumerator()
-  let rec loop n =
-    if n = 0 then true
-    elif e.MoveNext() then loop (n - 1)
-    else false
-  loop n
+let hasAtLeast n (items : seq<_>) = 
+    use e = items.GetEnumerator()
+    
+    let rec loop n = 
+        if n = 0 then true
+        elif e.MoveNext() then loop (n - 1)
+        else false
+    loop n
 
 let gatherProv r includeWorking since = 
     let includeWorkingArea ax = 
@@ -41,12 +42,12 @@ let gatherProv r includeWorking since =
             | true -> yield Prov.Activity.fromWorkingArea r (Git.workingArea r)
             | false -> ()
             yield! ax
-    }
-    Git.commits since r 
+        }
+    Git.commits since r
     |> Seq.pairwise
     |> Seq.map (Prov.Activity.fromCommit r)
     |> includeWorkingArea
-          
+
 let branchNs (g : VDS.RDF.IGraph, r) = 
     let name = Git.directoryName (Git.workingDirectory r)
     let tree = Git.branchName r

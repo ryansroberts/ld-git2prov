@@ -42,7 +42,6 @@ let ``Changes from HEAD to alias of previous commit``() =
           Since "HEAD~1" ]
     |> approveGraph "HEADtoHEAD-1"
 
-[<Fact>]
 let ``Changes for all history``() = 
     clone "testrepo"
     g2p [ Main.Path "testrepo"

@@ -7,7 +7,7 @@ open Main
 open System.IO
 open common.RDF
 
-let pathToExpectations = "../tests/git2prov.tests/expected/"
+let pathToExpectations = "../tests/git2prov.Tests/expected/"
 let approveGraph (expectedName:string) (ttl:System.IO.Stream) =
   let g = Store.loadFile (pathToExpectations ++ (sprintf "%s.ttl" expectedName))
   let g' = Store.loadTtl ttl

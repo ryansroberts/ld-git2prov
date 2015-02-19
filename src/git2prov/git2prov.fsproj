@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="..\..\paket-files\nhsevidence\ld-mimir\common\RDF.fs" />
+    <Compile Include="RDF.fs" />
     <Compile Include="Git.fs" />
     <Compile Include="Prov.fs" />
     <Compile Include="TTL.fs" />

@@ -8,10 +8,12 @@ open System.IO
 open common.RDF
 
 let pathToExpectations = "../tests/git2prov.tests/expected/"
+let approveGraph (expectedName:string) (ttl:System.IO.Stream) =
+  let g = Store.loadFile (pathToExpectations ++ (sprintf "%s.ttl" expectedName))
+  let g' = Store.loadTtl ttl
 
-type Approve() = 
-    class
-    end
+  let diff = Store.diff g g'
+  Assert.True (diff.AreEqual,string diff)
 
 let clone repo = 
     let dir = sprintf "Examples/%s" repo
@@ -37,7 +39,7 @@ let ``There are no changes from HEAD to HEAD``() =
     g2p [ Main.Path "testrepo"
           ShowHistory
           Since "HEAD" ]
-    |> Approve.graph "HEADtoHEAD"
+    |> approveGraph "HEADtoHEAD"
 
 [<Fact>]
 let ``Changes from HEAD to hash of previous commit``() = 
@@ -45,7 +47,7 @@ let ``Changes from HEAD to hash of previous commit``() =
     g2p [ Main.Path "testrepo"
           ShowHistory
           Since "be3563a" ]
-    |> Approve.graph "HEADtobe3"
+    |> approveGraph "HEADtobe3"
 
 [<Fact>]
 let ``Changes from HEAD to alias of previous commit``() = 
@@ -53,11 +55,11 @@ let ``Changes from HEAD to alias of previous commit``() =
     g2p [ Main.Path "testrepo"
           ShowHistory
           Since "HEAD~1" ]
-    |> Approve.graph "HEADtoHEAD-1"
+    |> approveGraph "HEADtoHEAD-1"
 
 [<Fact>]
 let ``Changes for all history``() = 
     clone "testrepo"
     g2p [ Main.Path "testrepo"
           ShowHistory ]
-    |> Approve.graph "AllHistory"
+    |> approveGraph "AllHistory"

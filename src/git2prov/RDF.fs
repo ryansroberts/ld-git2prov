@@ -12,8 +12,8 @@ module RDF =
         override x.ToString() = 
             match x with
             | Uri(q, p, Some r) -> 
-                sprintf "%s:%s%s" q (p |> String.concat "/") r
-            | Uri(q, p, None) -> sprintf "%s:/%s" q (p |> String.concat "/")
+                sprintf "%s:%s/%s" q (p |> List.reduce (++)) r
+            | Uri(q, p, None) -> sprintf "%s:/%s" q (p |> List.reduce (++))
     
     module ns = 
         let prov = "http://www.w3.org/ns/prov#"

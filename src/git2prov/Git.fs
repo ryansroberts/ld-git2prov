@@ -20,6 +20,9 @@ type Content =
 
 type Path = 
     | Path of string
+    override x.ToString() = 
+        match x with
+        | Path p -> p
 
 let repo p = Repository(new LibGit2Sharp.Repository(p))
 

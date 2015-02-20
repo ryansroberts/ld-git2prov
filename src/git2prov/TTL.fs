@@ -32,6 +32,7 @@ let provHistory includeContent (g : IGraph) (act : Activity) =
                  [ (a, qn "prov:Entity")
                    (qn "prov:wasGeneratedBy", puri u.Commit)
                    (qn "prov:wasAttributedTo", puri u.AttributedTo)
+                   (qn "compilation:path", literal (string u.Path))
                    (qn "prov:specializationOf", puri u.SpecialisationOf) ])
         match u.Content, includeContent with
         | Content.Text t, true -> 

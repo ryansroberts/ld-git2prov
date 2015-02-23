@@ -11,15 +11,6 @@
 @prefix cnt: <http://www.w3.org/2011/content#>.
 @prefix tree: <http://nice.org.uk/git2prov//tree/master>.
 
-_:autos1 a prov:Association;
-         prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com>;
-         prov:hadRole "author, committer".
-_:autos2 a prov:Association;
-         prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com>;
-         prov:hadRole "author, committer".
-_:autos3 a prov:Association;
-         prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com>;
-         prov:hadRole "author, committer".
 <http://nice.org.uk/ns/prov#commit/1385f264afb75a56a5bec74243be9b367ba4ca08/README> compilation:path "README";
                                                                                     a prov:Entity;
                                                                                     cnt:chars """hey there
@@ -42,7 +33,9 @@ _:autos3 a prov:Association;
 """;
                                             prov:endedAtTime "2010-05-24T10:19:19.000000-07:00"^^xsd:dateTime;
                                             prov:informedBy <http://nice.org.uk/ns/prov#commit/4a202b3>;
-                                            prov:qualifiedAssociation _:autos1;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
                                             prov:startedAtTime "2010-05-24T10:19:19.000000-07:00"^^xsd:dateTime;
                                             prov:uses <http://nice.org.uk/ns/prov#commit/1385f264afb75a56a5bec74243be9b367ba4ca08/README>,
                                                       <http://nice.org.uk/ns/prov#commit/45b983be36b73c0788dc9cbcb76cbb80fc7bb057/branch_file.txt>,
@@ -68,7 +61,9 @@ _:autos3 a prov:Association;
                                             prov:endedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
                                             prov:informedBy <http://nice.org.uk/ns/prov#commit/9fd738e>,
                                                             <http://nice.org.uk/ns/prov#commit/c47800c>;
-                                            prov:qualifiedAssociation _:autos3;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
                                             prov:startedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
                                             prov:uses <http://nice.org.uk/ns/prov#commit/45b983be36b73c0788dc9cbcb76cbb80fc7bb057/1/branch_file.txt>;
                                             prov:wasAssociatedWith <http://nice.org.uk/ns/prov#user/schacon@gmail.com>.
@@ -77,7 +72,9 @@ _:autos3 a prov:Association;
 """;
                                             prov:endedAtTime "2010-05-25T11:58:14.000000-07:00"^^xsd:dateTime;
                                             prov:informedBy <http://nice.org.uk/ns/prov#commit/5b5b025>;
-                                            prov:qualifiedAssociation _:autos2;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://nice.org.uk/ns/prov#user/schacon@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
                                             prov:startedAtTime "2010-05-25T11:58:14.000000-07:00"^^xsd:dateTime;
                                             prov:uses <http://nice.org.uk/ns/prov#commit/a71586c1dfe8a71c6cbf6c129f404c5642ff31bd/new.txt>,
                                                       <http://nice.org.uk/ns/prov#commit/a8233120f6ad708f843d861ce2b7228ec4e3dec6/README>;

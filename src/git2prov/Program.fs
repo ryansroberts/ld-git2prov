@@ -71,8 +71,18 @@ let writeProv repo showContent showHistory showCompilation prov =
     ()
 
 [<EntryPoint>]
-let main argv = 
+let main argv =
+    let toLower (s:string) = s.ToLower() 
+    let containsParam param = Seq.map toLower >> Seq.exists ((=) (toLower param))
+    let paramIsHelp param = containsParam param ["help"; "?"; "/?"; "-h"; "--help"; "/h"; "/help"]
+  
     let parser = UnionArgParser.Create<Arguments>()
+
+    if (( argv.Length = 2 && paramIsHelp argv.[1] ) || argv.Length = 1) then
+      printfn """Usage: git2prov [options]
+                 %s""" ( parser.Usage ()  )
+      exit 1
+    
     let args = parser.Parse argv
     let repo = Git.repo (args.GetResult(<@ Path @>, defaultValue = "."))
     let includeWorking = args.Contains(<@ IncludeWorkingArea @>)

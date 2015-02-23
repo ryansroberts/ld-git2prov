@@ -63,5 +63,5 @@ let provCompilation (g : IGraph) (act : Activity) =
 
 let ttl (tw : System.IO.TextWriter) g = 
     let writer = 
-        CompressingTurtleWriter(CompressionLevel = 3, PrettyPrintMode = true)
+        CompressingTurtleWriter(WriterCompressionLevel.High)
     writer.Save(g, tw)

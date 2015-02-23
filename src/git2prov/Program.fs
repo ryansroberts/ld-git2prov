@@ -26,15 +26,6 @@ type Arguments =
             | Path p -> "Path to a git repository"
             | Since r -> "Commit ref to generate PROV from"
 
-let hasAtLeast n (items : seq<_>) = 
-    use e = items.GetEnumerator()
-    
-    let rec loop n = 
-        if n = 0 then true
-        elif e.MoveNext() then loop (n - 1)
-        else false
-    loop n
-
 let gatherProv r includeWorking since = 
     let includeWorkingArea ax = 
         seq { 

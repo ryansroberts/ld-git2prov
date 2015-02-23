@@ -4,11 +4,10 @@
 #I "../../bin"
 (**
 
+Git2Prov
 ========================
 
-Say more
+Converts git history into W3C prov and content suitable for a compilation pipeline
 
-*)
-(**
-Some more info
-*)
+**)
+

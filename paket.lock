@@ -5,7 +5,7 @@ NUGET
       HtmlAgilityPack (>= 1.4.9) - framework: >= net35, >= net35, >= net40, >= net40
       Newtonsoft.Json (>= 6.0.6)
       VDS.Common (1.4.0)
-    FAKE (3.17.0)
+    FAKE (3.17.5)
     FSharp.Compiler.Service (0.0.82)
     FSharp.Core (3.1.2.1)
     FSharp.Formatting (2.7.4)
@@ -30,15 +30,15 @@ NUGET
     Suave (0.25.0)
       FSharp.Core (>= 3.1.2.1)
       FsPickler (>= 1.0.7)
-    UnionArgParser (0.8.5)
+    UnionArgParser (0.8.6)
     VDS.Common (1.4.0)
     xunit (1.9.2)
     xunit.runners (1.9.2)
 GITHUB
   remote: fsharp/FAKE
   specs:
-    modules/Octokit/Octokit.fsx (412ed0da4a9a8635e243e2ea06cf654ca805f6d8)
+    modules/Octokit/Octokit.fsx (575e7ab5050d2ddec80ba8d3a98cfb10ba327965)
       Octokit
   remote: nhsevidence/ld-mimir
   specs:
-    common/RDF.fs (a949edc9f53db38689f17f2053d19fb6a91a88d4)
+    common/RDF.fs (0024f44edf573dcf70256cb8e06e5769d2b31d10)

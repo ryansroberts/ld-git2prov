@@ -40,7 +40,7 @@ type FileVersion =
             for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
                 yield { Id = Uri.versionedcontent f
                         Content = Git.content c.Id.Sha f.Path r
-                        Path = Path f.Path
+                        Path = Path.fromStr f.Path
                         PreviousVersion = Some f.OldOid.Sha
                         SpecialisationOf = Uri.specialisationOf (r, f.Path)
                         Commit = Uri.commit r c
@@ -52,7 +52,7 @@ type FileVersion =
             for f in wx do
                 yield { Id = Uri.workingAreaFile f
                         Content = Git.unstagedContent f r
-                        Path = Path f.FilePath
+                        Path = Path.fromStr f.FilePath
                         PreviousVersion = None
                         SpecialisationOf = Uri.specialisationOf (r, f.FilePath)
                         Commit = Uri.workingarea

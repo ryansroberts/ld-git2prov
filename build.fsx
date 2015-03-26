@@ -254,7 +254,7 @@ Target "Release" (fun _ ->
   |> releaseDraft
                   |> Async.RunSynchronously)
 Target "BuildPackage" (fun _ ->
-  let n = Environment.GetEnvironmentVariable "TRAVIS_BUILD_NUMBER"
+  let n = Environment.GetEnvironmentVariable "DRONE_BUILD_NUMBER"
   let v = sprintf "1.0.%s" n
   [
    ("mono",".paket/paket.exe pack output . version " + v)

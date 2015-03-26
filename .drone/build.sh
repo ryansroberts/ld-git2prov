@@ -1,8 +1,6 @@
 #!/bin/bash
-set -e  
+set -e
 cd $DRONE_BUILD_DIR
 
 
-./build.sh 
-
-
+./build.sh BuildPackage

@@ -1,0 +1,8 @@
+type file
+id NICE.git2prov
+version 1.0
+authors Ryan Roberts
+description
+       Convert git history and uncomitted working area to w3c provenence
+files
+  bin/Release ==> tools

@@ -258,7 +258,7 @@ Target "BuildPackage" (fun _ ->
   let v = sprintf "1.0.%s" n
   [
    ("mono",".paket/paket.exe pack output . version " + v)
-   ("mono",sprintf ".paket/paket.exe push apikey $DRONE_NUGETKEY url https://www.nuget.org file NICE.git2prov.%s.nupkg" v)
+   ("mono",sprintf ".paket/paket.exe push apikey f3709835-b06d-444a-87dc-18786597f812 url https://www.nuget.org file NICE.git2prov.%s.nupkg" v)
   ]
   |> List.iter (fun (v,a) -> Shell.Exec (v,args=a) |> ignore)
 )

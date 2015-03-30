@@ -30,15 +30,14 @@ let commits (since : string) r =
     match r with
     | Repository r ->
         let c = r.Lookup<LibGit2Sharp.Commit>(since)
-        let refs = r.Refs.ReachableFrom([ c ])
+        if(c = null) then (failwithf "Cannot locate commit with hash %s" since)
         seq {
-            yield Commit c
             for c in r.Commits.QueryBy
-                         (CommitFilter
-                              (Since = refs, Until = c,
-                               SortBy = (CommitSortStrategies.Topological
-                                         ||| CommitSortStrategies.Reverse))) ->
-                Commit c
+                         (CommitFilter (Until = c,
+                                        SortBy = (CommitSortStrategies.Topological
+                                                  ||| CommitSortStrategies.Reverse))) ->
+              Commit c
+            yield Commit (r.Head.Tip)
         }
 
 let tree = function
@@ -52,7 +51,8 @@ let workingArea =
                  [ s.Added; s.Modified; s.Untracked; s.Staged; s.RenamedInIndex;
                    s.RenamedInWorkDir ] |> Seq.toList, Commit r.Head.Tip)
 let diff (c, c') = function
-    | Repository r -> r.Diff.Compare<TreeChanges>(oldTree = c, newTree = c')
+  | Repository r ->
+    r.Diff.Compare<TreeChanges>(oldTree = c, newTree = c')
 let diffs cx = function
     | Repository r ->
         cx

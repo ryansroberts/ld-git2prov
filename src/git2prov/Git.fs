@@ -28,9 +28,14 @@ let repo p = Repository(new LibGit2Sharp.Repository(p))
 
 let commits (since : string) r =
     match r with
-    | Repository r ->
-        let c = r.Lookup<LibGit2Sharp.Commit>(since)
-        if(c = null) then (failwithf "Cannot locate commit with hash %s" since)
+      | Repository r ->
+        let c = match since with
+          | "all" ->
+            (null :> LibGit2Sharp.Commit)
+          | since ->
+            let c = r.Lookup<LibGit2Sharp.Commit>(since)
+            if(c = null) then (failwithf "Cannot locate commit with hash %s" since)
+            c
         seq {
             for c in r.Commits.QueryBy
                          (CommitFilter (Until = c,

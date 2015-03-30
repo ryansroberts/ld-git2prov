@@ -3,27 +3,36 @@ module Prov
 open Git
 open common.RDF
 
+let sha (s:string) =
+  let alg = System.Security.Cryptography.SHA256.Create()
+  alg.ComputeHash(System.Text.Encoding.UTF8.GetBytes s) |> ignore
+  alg.Hash
+  |> Array.fold (fun (a:System.Text.StringBuilder) x ->
+                   a.Append(sprintf "%X" (int x))
+                 ) ( System.Text.StringBuilder() )
+  |> string
+
 let short sha = function
     | Repository r -> r.ObjectDatabase.ShortenObjectId sha
 let iso (date : System.DateTimeOffset) = date.ToString("o")
 let (++) a b = System.IO.Path.Combine(a, b)
 
 type Uri with
-    static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
-    static member compilation =
+  static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
+    static member compilation c = 
         Uri
-            ("compilation", [ "compilation" ],
-             Some(iso System.DateTimeOffset.Now))
-    static member workingarea = Uri("git2prov", [ "workingarea" ], None)
+            ("git2prov", [ "compilation" ],
+             Some(sha( string c) ))
+    static member workingarea = Uri("git2prov", [ "commit" ], Some("workingarea"))
     static member identity (c : LibGit2Sharp.Commit) =
         Uri("git2prov", [ "user" ], Some c.Author.Email)
     static member identity() =
         Uri("git2prov", [ "user" ], Some System.Environment.UserName)
     static member versionedcontent (f : LibGit2Sharp.TreeEntryChanges) =
-        Uri("git2prov", [ "commit"; f.Oid.Sha ], Some f.Path)
+        Uri("git2prov", [ "entity"], Some (sha ( f.Path + f.Oid.Sha )))
     static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
-        Uri("git2prov", [ "workingarea" ], Some f.FilePath)
-    static member specialisationOf (r, p) = Uri("base", [ p ], None)
+        Uri("git2prov", [ "workingarea" ], Some (sha f.FilePath))
+    static member specialisationOf (r, p) = Uri("git2prov",["resource"],Some (sha p))
 
 type FileVersion =
     { Id : Uri
@@ -84,7 +93,8 @@ type Activity =
               Used = FileVersion.from (wx, r)
               InformedBy = [ Uri.commit r c ] }
     static member concat ax =
-        { Id = Uri.compilation
+        let last = Seq.head ax
+        { Id = Uri.compilation last.Id
           Time = System.DateTimeOffset.Now
           Label =
               "Change this to a compilation message that is actualy useful to somebody"
@@ -95,4 +105,5 @@ type Activity =
               |> Seq.concat
               |> Seq.groupBy (fun a -> a.SpecialisationOf)
               |> Seq.map (fun (_, dx) -> dx |> Seq.last)
-          InformedBy = [] }
+              |> Seq.toList
+          InformedBy = [(Seq.head ax).Id] }

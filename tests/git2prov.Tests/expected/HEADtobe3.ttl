@@ -11,20 +11,13 @@
 @prefix cnt: <http://www.w3.org/2011/content#>.
 @prefix tree: <http://nice.org.uk/git2prov//tree/master>.
 
-<http://nice.org.uk/ns/prov/commit/45b983be36b73c0788dc9cbcb76cbb80fc7bb057/1/branch_file.txt> compilation:path "1/branch_file.txt";
-                                                                                               a prov:Entity;
-                                                                                               prov:specializationOf <http://nice.org.uk/ns/prov//1/branch_file.txt>;
-                                                                                               prov:wasAttributedTo <http://nice.org.uk/ns/prov/user/schacon@gmail.com>;
-                                                                                               prov:wasGeneratedBy <http://nice.org.uk/ns/prov/commit/be3563a>.
-<http://nice.org.uk/ns/prov/commit/be3563a> a prov:Activity;
-                                            rdfs:label """Merge branch 'br2'
+<http://nice.org.uk/ns/prov/commit#4c062a6> a prov:Activity;
+                                            rdfs:label """directory was added
 """;
-                                            prov:endedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
-                                            prov:informedBy <http://nice.org.uk/ns/prov/commit/9fd738e>,
-                                                            <http://nice.org.uk/ns/prov/commit/c47800c>;
+                                            prov:endedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                            prov:informedBy <http://nice.org.uk/ns/prov/commit#be3563a>;
                                             prov:qualifiedAssociation [a prov:Association ; 
-                                                                       prov:agent <http://nice.org.uk/ns/prov/user/schacon@gmail.com> ; 
+                                                                       prov:agent <http://nice.org.uk/ns/prov/user#gorbach.alexey@gmail.com> ; 
                                                                        prov:hadRole "author, committer"];
-                                            prov:startedAtTime "2010-05-25T11:58:27.000000-07:00"^^xsd:dateTime;
-                                            prov:uses <http://nice.org.uk/ns/prov/commit/45b983be36b73c0788dc9cbcb76cbb80fc7bb057/1/branch_file.txt>;
-                                            prov:wasAssociatedWith <http://nice.org.uk/ns/prov/user/schacon@gmail.com>.
+                                            prov:startedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                            prov:wasAssociatedWith <http://nice.org.uk/ns/prov/user#gorbach.alexey@gmail.com>.

@@ -34,8 +34,7 @@ let commits (since : string) r =
         seq {
             for c in r.Commits.QueryBy
                          (CommitFilter (Until = c,
-                                        SortBy = (CommitSortStrategies.Topological
-                                                  ||| CommitSortStrategies.Reverse))) ->
+                                        SortBy = (CommitSortStrategies.Topological ||| CommitSortStrategies.Time))) ->
               Commit c
             yield Commit (r.Head.Tip)
         }

@@ -93,7 +93,7 @@ type Activity =
               Used = FileVersion.from (wx, r)
               InformedBy = [ Uri.commit r c ] }
     static member concat ax =
-        let last = Seq.last ax
+        let last = Seq.head ax
         { Id = Uri.compilation last.Id
           Time = System.DateTimeOffset.Now
           Label =
@@ -106,4 +106,4 @@ type Activity =
               |> Seq.groupBy (fun a -> a.SpecialisationOf)
               |> Seq.map (fun (_, dx) -> dx |> Seq.last)
               |> Seq.toList
-          InformedBy = [(Seq.last ax).Id] }
+          InformedBy = [(Seq.head ax).Id] }

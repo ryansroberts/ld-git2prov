@@ -95,4 +95,4 @@ let main argv =
         gatherProv repo includeWorking since
         |> writeProv repo showContent showHistory showCompilation
     | port -> Http.serve repo port
-    0 // return an integer exit code
+    0

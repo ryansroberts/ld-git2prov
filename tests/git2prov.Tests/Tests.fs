@@ -9,6 +9,7 @@ open common.RDF
 open TestSupport
 
 
+
 let g2p args =
     let parser = UnionArgParser.Create<Arguments>()
     let args = parser.PrintCommandLine args |> String.concat "  "
@@ -45,6 +46,7 @@ let ``Changes from HEAD to alias of previous commit``() =
 
 [<Fact>]
 let ``Changes for all history``() =
+
     clone "testrepo"
     g2p [ Main.Path "testrepo"
           ShowHistory

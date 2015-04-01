@@ -1,5 +1,5 @@
 module TestSupport
- 
+
 open common.RDF
 open System
 open VDS.RDF
@@ -49,7 +49,7 @@ let showDifferences (report:VDS.RDF.GraphDiffReport) = [
                 yield(t.ToString(formatter))
             yield ""
   ]
-    
+
 let pathToExpectations = "../tests/git2prov.Tests/expected/"
 let approveGraph (expectedName:string) (ttl:System.IO.Stream) =
   let g = Store.loadFile (pathToExpectations ++ (sprintf "%s.ttl" expectedName))
@@ -58,11 +58,9 @@ let approveGraph (expectedName:string) (ttl:System.IO.Stream) =
   let diff = Store.diff g g'
   Assert.True(diff.AreEqual ,showDifferences diff |> String.concat Environment.NewLine)
 
-let clone repo = 
+let clone repo =
     if Directory.Exists repo then Directory.Delete(repo, true)
-    let ps = 
+    let ps =
         Process.Start
             ("git", sprintf "clone ../tests/git2prov.Tests/examples/%s" repo)
     ps.WaitForExit()
-
-

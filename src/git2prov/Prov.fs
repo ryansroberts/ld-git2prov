@@ -19,7 +19,7 @@ let (++) a b = System.IO.Path.Combine(a, b)
 
 type Uri with
   static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
-    static member compilation c = 
+    static member compilation c =
         Uri
             ("git2prov", [ "compilation" ],
              Some(sha( string c) ))
@@ -40,6 +40,7 @@ type FileVersion =
       Path : Path
       PreviousVersion : string option
       SpecialisationOf : Uri
+      Time : System.DateTimeOffset
       Commit : Uri
       AttributedTo : Uri }
 
@@ -53,6 +54,7 @@ type FileVersion =
                         PreviousVersion = Some f.OldOid.Sha
                         SpecialisationOf = Uri.specialisationOf (r, f.Path)
                         Commit = Uri.commit r c
+                        Time = c.Author.When
                         AttributedTo = Uri.identity c }
         }
 
@@ -65,6 +67,7 @@ type FileVersion =
                         PreviousVersion = None
                         SpecialisationOf = Uri.specialisationOf (r, f.FilePath)
                         Commit = Uri.workingarea
+                        Time = System.DateTimeOffset.Now
                         AttributedTo = Uri.identity() }
         }
 
@@ -103,6 +106,7 @@ type Activity =
               ax
               |> Seq.map (fun a -> a.Used)
               |> Seq.concat
+              |> Seq.sortBy (fun a -> a.Time)
               |> Seq.groupBy (fun a -> a.SpecialisationOf)
               |> Seq.map (fun (_, dx) -> dx |> Seq.last)
               |> Seq.toList

@@ -87,5 +87,6 @@ let content (h : string) p = function
 let unstagedContent (f : LibGit2Sharp.StatusEntry) = function
     | Repository r ->
         try
-            Content.Text(System.IO.File.ReadAllText(r.Info.Path ++ f.FilePath))
-        with :? System.IO.IOException -> Content.NoContent
+            Content.Text(System.IO.File.ReadAllText(r.Info.Path ++ ".." ++ f.FilePath))
+        with e  ->
+          Content.NoContent

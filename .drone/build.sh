@@ -3,4 +3,4 @@ set -e
 cd $DRONE_BUILD_DIR
 
 
-./build.sh Release
+./build.sh BuildPackage

@@ -43,12 +43,12 @@ let solutionFile = "git2prov.sln"
 let testAssemblies = "bin/*Tests*.dll"
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
-let gitOwner = "ryansroberts"
+let gitOwner = "nhsevidence"
 let gitHome = "https://github.com/" + gitOwner
 // The name of the project on GitHub
-let gitName = "git2prov"
+let gitName = "ld-git2prov"
 // The url for the raw files hosted
-let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/ryansroberts"
+let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/nhsevidence"
 // --------------------------------------------------------------------------------------
 // END TODO: The rest of the file includes standard build steps
 // --------------------------------------------------------------------------------------

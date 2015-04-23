@@ -261,6 +261,7 @@ Target "BuildPackage" (fun _ ->
    ("mono",sprintf ".paket/paket.exe push apikey f3709835-b06d-444a-87dc-18786597f812 url https://www.nuget.org file NICE.git2prov.%s.nupkg" v)
   ]
   |> List.iter (fun (v,a) -> Shell.Exec (v,args=a) |> ignore)
+  Nug
 )
 
 

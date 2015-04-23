@@ -1,4 +1,4 @@
-image: nice/linkeddata-build:latest
+image: nice/ld-docker-build:latest
 script:
   - ./.drone/build.sh
    

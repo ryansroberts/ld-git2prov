@@ -45,8 +45,22 @@ let branchNs (g : VDS.RDF.IGraph, r) =
     let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree
     g.NamespaceMap.AddNamespace("tree", VDS.RDF.UriFactory.Create git2prov)
 
+
+let waitUntilWritable (s:System.IO.Stream) =
+  let rec wait x =
+    if (x = 5) then failwith "Could not open output stream within 1000ms"
+    async {
+    match s.CanWrite with
+    | true -> ()
+    | false -> let! d = Async.Sleep 100
+               return! wait (x+1)
+    }
+  wait 0 |> Async.RunSynchronously
+  s
+
 let writeProv repo showContent showHistory showCompilation prov =
-    use fout = new System.IO.StreamWriter(System.Console.OpenStandardOutput())
+    let sio = waitUntilWritable ( System.Console.OpenStandardOutput() )
+    use fout = new System.IO.StreamWriter(sio)
     use g = new VDS.RDF.Graph()
     RDF.ns.add (g, RDF.ns.git2prov)
     branchNs (g, repo)

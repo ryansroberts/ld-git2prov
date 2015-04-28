@@ -6,11 +6,7 @@ open common.RDF
 let sha (s:string) =
   let alg = System.Security.Cryptography.SHA256.Create()
   alg.ComputeHash(System.Text.Encoding.UTF8.GetBytes s) |> ignore
-  alg.Hash
-  |> Array.fold (fun (a:System.Text.StringBuilder) x ->
-                   a.Append(sprintf "%X" (int x))
-                 ) ( System.Text.StringBuilder() )
-  |> string
+  System.BitConverter.ToString(alg.Hash).Replace("-","")
 
 let short sha = function
     | Repository r -> r.ObjectDatabase.ShortenObjectId sha

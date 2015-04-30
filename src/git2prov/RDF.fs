@@ -18,9 +18,8 @@ module RDF =
     module ns =
         let prov = "http://www.w3.org/ns/prov#"
         let owl = "http://www.w3.org/2002/07/owl#"
-        let cnt = "http://www.w3.org/2011/content#"
         let compilation = "http://nice.org.uk/ns/compilation#"
-        let git2prov = "http://nice.org.uk/ns/prov/"
+        let git2prov = "http://nice.org.uk/prov/"
 
         let add (g : IGraph, baseUri) =
             g.BaseUri <- UriFactory.Create baseUri
@@ -30,11 +29,11 @@ module RDF =
             g.NamespaceMap.AddNamespace("base", UriFactory.Create baseUri)
             g.NamespaceMap.AddNamespace
                 ("compilation", UriFactory.Create compilation)
-            g.NamespaceMap.AddNamespace("cnt", UriFactory.Create cnt)
 
     let literal (g : IGraph) s = g.CreateLiteralNode s :> INode
     let uri (g : IGraph) u = UriFactory.Create u |> g.CreateUriNode :> INode
     let puri (g : IGraph) (u : Uri) = g.CreateUriNode(string u) :> INode
+    let suri (g : IGraph) (u : System.Uri) = g.CreateUriNode(u) :> INode
     let qn (g : IGraph) (qn : string) = g.CreateUriNode qn :> INode
     let a (g : IGraph) = qn g "rdf:type"
     let date (g : IGraph) (d : System.DateTimeOffset) =

@@ -15,8 +15,8 @@ type WorkingArea =
     | WorkingArea of StatusEntry list * Commit
 
 type Content =
-    | Text of string
-    | NoContent
+    | Revision of System.Uri
+    | Working of System.Uri
 
 type Path =
     | Path of string
@@ -73,20 +73,6 @@ let workingDirectory = function
 let directoryName = function
     | Path p -> p.Split(Path.DirectorySeparatorChar) |> Seq.last
 let content (h : string) p = function
-    | Repository r ->
-        let c = r.Lookup<LibGit2Sharp.Commit> h
-        match c.[p] with
-        | null -> NoContent
-        | tr ->
-            match tr.TargetType with
-            | LibGit2Sharp.TreeEntryTargetType.Blob ->
-                let b = tr.Target :?> LibGit2Sharp.Blob
-                use r = new StreamReader(b.GetContentStream())
-                Text(r.ReadToEnd())
-            | _ -> NoContent
+    | Repository r -> Revision(System.Uri (sprintf "http://raw.git.nice.org.uk/%s:%s" h p))
 let unstagedContent (f : LibGit2Sharp.StatusEntry) = function
-    | Repository r ->
-        try
-            Content.Text(System.IO.File.ReadAllText(r.Info.Path ++ ".." ++ f.FilePath))
-        with e  ->
-          Content.NoContent
+    | Repository r -> Working(System.Uri (sprintf "file://%s%s" (r.Info.WorkingDirectory) (f.FilePath)))

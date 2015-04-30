@@ -24,8 +24,8 @@ type Uri with
         Uri("git2prov", [ "user" ], Some c.Author.Email)
     static member identity() =
         Uri("git2prov", [ "user" ], Some System.Environment.UserName)
-    static member versionedcontent (f : LibGit2Sharp.TreeEntryChanges) =
-        Uri("git2prov", [ "entity"], Some (sha ( f.Path + f.Oid.Sha )))
+    static member versionedcontent hash p r =
+        Uri("git2prov", [ "entity"], Some ((short hash r) + ":" + p))
     static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
         Uri("git2prov", [ "workingarea" ], Some (sha f.FilePath))
     static member specialisationOf (r, p) = Uri("git2prov",["resource"],Some (sha p))
@@ -44,9 +44,9 @@ type FileVersion =
         seq {
             let d = diff (c.Tree, c'.Tree) r
             for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
-                yield { Id = Uri.versionedcontent f
-                        Content = Git.content c.Id.Sha f.Path r
-                        Path = Path(f.Path)
+                yield { Id = Uri.versionedcontent c (f.Path) r
+                        Content = Git.content (short c r) (f.Path) r
+                        Path = Path (f.Path)
                         PreviousVersion = Some f.OldOid.Sha
                         SpecialisationOf = Uri.specialisationOf (r, f.Path)
                         Commit = Uri.commit r c
@@ -95,8 +95,7 @@ type Activity =
         let last = Seq.head ax
         { Id = Uri.compilation last.Id
           Time = System.DateTimeOffset.Now
-          Label =
-              "Change this to a compilation message that is actualy useful to somebody"
+          Label = "Change this to a compilation message that is actualy useful to somebody"
           User = Uri.identity()
           Used =
               ax

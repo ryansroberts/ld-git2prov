@@ -1,23 +1,22 @@
-@base <http://nice.org.uk/ns/prov/>.
+@base <http://nice.org.uk/prov/>.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix git2prov: <http://nice.org.uk/ns/prov/>.
-@prefix base: <http://nice.org.uk/ns/prov/>.
+@prefix git2prov: <http://nice.org.uk/prov/>.
+@prefix base: <http://nice.org.uk/prov/>.
 @prefix compilation: <http://nice.org.uk/ns/compilation#>.
-@prefix cnt: <http://www.w3.org/2011/content#>.
 @prefix tree: <http://nice.org.uk/git2prov//tree/master>.
 
-<http://nice.org.uk/ns/prov/commit#4c062a6> a prov:Activity;
-                                            rdfs:label """directory was added
+<http://nice.org.uk/prov/commit#4c062a6> a prov:Activity;
+                                         rdfs:label """directory was added
 """;
-                                            prov:endedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
-                                            prov:informedBy <http://nice.org.uk/ns/prov/commit#be3563a>;
-                                            prov:qualifiedAssociation [a prov:Association ; 
-                                                                       prov:agent <http://nice.org.uk/ns/prov/user#gorbach.alexey@gmail.com> ; 
-                                                                       prov:hadRole "author, committer"];
-                                            prov:startedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
-                                            prov:wasAssociatedWith <http://nice.org.uk/ns/prov/user#gorbach.alexey@gmail.com>.
+                                         prov:endedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                         prov:informedBy <http://nice.org.uk/prov/commit#be3563a>;
+                                         prov:qualifiedAssociation [a prov:Association ; 
+                                                                    prov:agent <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
+                                                                    prov:hadRole "author, committer"];
+                                         prov:startedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                         prov:wasAssociatedWith <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com>.

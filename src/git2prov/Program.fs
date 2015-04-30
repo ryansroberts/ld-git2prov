@@ -8,7 +8,6 @@ type Arguments =
     | IncludeWorkingArea
     | ShowHistory
     | ShowCompilation
-    | ShowContent
     | BaseUri of string
     | Path of string
     | Since of string
@@ -21,7 +20,6 @@ type Arguments =
             | ShowHistory _ -> "Show provenence for included git history"
             | ShowCompilation _ ->
                 "Generate a compilation activity for included git history"
-            | ShowContent _ -> "Add content statements to file entities"
             | BaseUri s -> "Base uri for generated provenence"
             | Path p -> "Path to a git repository"
             | Since r -> "Commit ref to generate PROV from"
@@ -45,28 +43,15 @@ let branchNs (g : VDS.RDF.IGraph, r) =
     let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree
     g.NamespaceMap.AddNamespace("tree", VDS.RDF.UriFactory.Create git2prov)
 
-
-let waitUntilWritable (s:System.IO.Stream) =
-  let rec wait x =
-    if (x = 5) then failwith "Could not open output stream within 1000ms"
-    async {
-    match s.CanWrite with
-    | true -> ()
-    | false -> let! d = Async.Sleep 100
-               return! wait (x+1)
-    }
-  wait 0 |> Async.RunSynchronously
-  s
-
-let writeProv repo showContent showHistory showCompilation prov =
-    let sio = waitUntilWritable ( System.Console.OpenStandardOutput() )
+let writeProv repo showHistory showCompilation prov =
+    let sio =System.Console.OpenStandardOutput()
     use fout = new System.IO.StreamWriter(sio)
     use g = new VDS.RDF.Graph()
     RDF.ns.add (g, RDF.ns.git2prov)
     branchNs (g, repo)
     let history() =
         prov
-        |> Seq.map (Translate.provHistory showContent g)
+        |> Seq.map (Translate.provHistory g)
         |> Seq.iter (fun _ -> ())
 
     let compilation() =
@@ -100,13 +85,12 @@ let main argv =
     let args = parser.Parse argv
     let repo = Git.repo (args.GetResult(<@ Path @>, defaultValue = "."))
     let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
-    let showContent = args.Contains(<@ ShowContent @>)
     let showHistory = args.Contains(<@ ShowHistory @>)
     let showCompilation = args.Contains(<@ ShowCompilation @>)
     let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
     match args.GetResult(<@ Server @>, defaultValue = 0) with
     | 0 ->
         gatherProv repo includeWorking since
-        |> writeProv repo showContent showHistory showCompilation
+        |> writeProv repo showHistory showCompilation
     | port -> Http.serve repo port
     0

@@ -6,12 +6,13 @@ open Git
 open VDS.RDF
 open VDS.RDF.Writing
 
-let provHistory includeContent (g : IGraph) (act : Activity) =
+let provHistory (g : IGraph) (act : Activity) =
     let triples = triples g
     let puri = puri g
     let date = date g
     let a = a g
     let qn = qn g
+    let suri = suri g
     let blank = blank g
     let literal = literal g
     triples (puri act.Id,
@@ -34,10 +35,11 @@ let provHistory includeContent (g : IGraph) (act : Activity) =
                    (qn "prov:wasAttributedTo", puri u.AttributedTo)
                    (qn "compilation:path", literal (string u.Path))
                    (qn "prov:specializationOf", puri u.SpecialisationOf) ])
-        match u.Content, includeContent with
-        | Content.Text t, true ->
-            triples (puri u.Id, [ (qn "cnt:chars", literal t) ])
-        | _, _ -> ()
+        match u.Content with
+        | Working x ->
+            triples (puri u.Id, [ (qn "compilation:content", suri x) ])
+        | Revision x ->
+            triples (puri u.Id, [ (qn "compilation:content", suri x) ])
     g
 
 let provCompilation (g : IGraph) (act : Activity) =

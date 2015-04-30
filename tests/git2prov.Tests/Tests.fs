@@ -53,11 +53,10 @@ let ``Changes for all history``() =
           Since "all"]
     |> approveGraph "AllHistory"
 
-let ``History with content and compilation``() =
+let ``History with compilation``() =
     clone "testrepo"
     g2p [ Main.Path "testrepo"
           ShowHistory
-          ShowContent
           ShowCompilation
           Since "all"]
     |> approveGraph "withcompilation"

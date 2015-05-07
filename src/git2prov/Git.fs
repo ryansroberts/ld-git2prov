@@ -73,6 +73,6 @@ let workingDirectory = function
 let directoryName = function
     | Path p -> p.Split(Path.DirectorySeparatorChar) |> Seq.last
 let content (h : string) p = function
-    | Repository r -> Revision(System.Uri (sprintf "http://raw.git.nice.org.uk/%s:%s" h p))
+    | Repository r -> Revision(System.Uri (sprintf "http://raw/%s:%s" h p))
 let unstagedContent (f : LibGit2Sharp.StatusEntry) = function
     | Repository r -> Working(System.Uri (sprintf "file://%s%s" (r.Info.WorkingDirectory) (f.FilePath)))

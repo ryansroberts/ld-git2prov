@@ -90,61 +90,61 @@
                                          prov:uses <http://nice.org.uk/prov/entity#c47800c:README>,
                                                    <http://nice.org.uk/prov/entity#c47800c:new.txt>;
                                          prov:wasAssociatedWith <http://nice.org.uk/prov/user#schacon@gmail.com>.
-<http://nice.org.uk/prov/entity#4a202b3:README> compilation:content <http://raw.git.nice.org.uk/4a202b3:README>;
+<http://nice.org.uk/prov/entity#4a202b3:README> compilation:content <http://raw/4a202b3:README>;
                                                 compilation:path "README";
                                                 a prov:Entity;
                                                 prov:specializationOf <http://nice.org.uk/prov/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                 prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                 prov:wasGeneratedBy <http://nice.org.uk/prov/commit#4a202b3>.
-<http://nice.org.uk/prov/entity#8496071:1/branch_file.txt> compilation:content <http://raw.git.nice.org.uk/8496071:1/branch_file.txt>;
+<http://nice.org.uk/prov/entity#8496071:1/branch_file.txt> compilation:content <http://raw/8496071:1/branch_file.txt>;
                                                            compilation:path "1/branch_file.txt";
                                                            a prov:Entity;
                                                            prov:specializationOf <http://nice.org.uk/prov/resource#FEB4B406D96BAA0D0A39772B44D84A2E5826061CDB5959A1266151EA369F142C>;
                                                            prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                            prov:wasGeneratedBy <http://nice.org.uk/prov/commit#8496071>.
-<http://nice.org.uk/prov/entity#8496071:README> compilation:content <http://raw.git.nice.org.uk/8496071:README>;
+<http://nice.org.uk/prov/entity#8496071:README> compilation:content <http://raw/8496071:README>;
                                                 compilation:path "README";
                                                 a prov:Entity;
                                                 prov:specializationOf <http://nice.org.uk/prov/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                 prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                 prov:wasGeneratedBy <http://nice.org.uk/prov/commit#8496071>.
-<http://nice.org.uk/prov/entity#8496071:branch_file.txt> compilation:content <http://raw.git.nice.org.uk/8496071:branch_file.txt>;
+<http://nice.org.uk/prov/entity#8496071:branch_file.txt> compilation:content <http://raw/8496071:branch_file.txt>;
                                                          compilation:path "branch_file.txt";
                                                          a prov:Entity;
                                                          prov:specializationOf <http://nice.org.uk/prov/resource#15883F91D550194A346E75D65877879413BF84257FBC47509B49DDE06254C434>;
                                                          prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                          prov:wasGeneratedBy <http://nice.org.uk/prov/commit#8496071>.
-<http://nice.org.uk/prov/entity#8496071:new.txt> compilation:content <http://raw.git.nice.org.uk/8496071:new.txt>;
+<http://nice.org.uk/prov/entity#8496071:new.txt> compilation:content <http://raw/8496071:new.txt>;
                                                  compilation:path "new.txt";
                                                  a prov:Entity;
                                                  prov:specializationOf <http://nice.org.uk/prov/resource#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313>;
                                                  prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                  prov:wasGeneratedBy <http://nice.org.uk/prov/commit#8496071>.
-<http://nice.org.uk/prov/entity#9fd738e:new.txt> compilation:content <http://raw.git.nice.org.uk/9fd738e:new.txt>;
+<http://nice.org.uk/prov/entity#9fd738e:new.txt> compilation:content <http://raw/9fd738e:new.txt>;
                                                  compilation:path "new.txt";
                                                  a prov:Entity;
                                                  prov:specializationOf <http://nice.org.uk/prov/resource#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313>;
                                                  prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                  prov:wasGeneratedBy <http://nice.org.uk/prov/commit#9fd738e>.
-<http://nice.org.uk/prov/entity#be3563a:README> compilation:content <http://raw.git.nice.org.uk/be3563a:README>;
+<http://nice.org.uk/prov/entity#be3563a:README> compilation:content <http://raw/be3563a:README>;
                                                 compilation:path "README";
                                                 a prov:Entity;
                                                 prov:specializationOf <http://nice.org.uk/prov/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                 prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                 prov:wasGeneratedBy <http://nice.org.uk/prov/commit#be3563a>.
-<http://nice.org.uk/prov/entity#be3563a:new.txt> compilation:content <http://raw.git.nice.org.uk/be3563a:new.txt>;
+<http://nice.org.uk/prov/entity#be3563a:new.txt> compilation:content <http://raw/be3563a:new.txt>;
                                                  compilation:path "new.txt";
                                                  a prov:Entity;
                                                  prov:specializationOf <http://nice.org.uk/prov/resource#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313>;
                                                  prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                  prov:wasGeneratedBy <http://nice.org.uk/prov/commit#be3563a>.
-<http://nice.org.uk/prov/entity#c47800c:README> compilation:content <http://raw.git.nice.org.uk/c47800c:README>;
+<http://nice.org.uk/prov/entity#c47800c:README> compilation:content <http://raw/c47800c:README>;
                                                 compilation:path "README";
                                                 a prov:Entity;
                                                 prov:specializationOf <http://nice.org.uk/prov/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                 prov:wasAttributedTo <http://nice.org.uk/prov/user#schacon@gmail.com>;
                                                 prov:wasGeneratedBy <http://nice.org.uk/prov/commit#c47800c>.
-<http://nice.org.uk/prov/entity#c47800c:new.txt> compilation:content <http://raw.git.nice.org.uk/c47800c:new.txt>;
+<http://nice.org.uk/prov/entity#c47800c:new.txt> compilation:content <http://raw/c47800c:new.txt>;
                                                  compilation:path "new.txt";
                                                  a prov:Entity;
                                                  prov:specializationOf <http://nice.org.uk/prov/resource#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313>;

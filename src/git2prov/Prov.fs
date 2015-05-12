@@ -40,9 +40,9 @@ type FileVersion =
       Commit : Uri
       AttributedTo : Uri }
 
-    static member from (c : LibGit2Sharp.Commit, c' : LibGit2Sharp.Commit, r) =
+    static member from (Commit c, r) =
         seq {
-            let d = diff (c.Tree, c'.Tree) r
+            let d = diff (Commit c) r
             for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
                 yield { Id = Uri.versionedcontent c (f.Path) r
                         Content = Git.content (short c r) (f.Path) r
@@ -75,12 +75,12 @@ type Activity =
       Used : FileVersion seq
       InformedBy : Uri list }
     static member fromCommit r = function
-        | Commit c, Commit c' ->
+        | Commit c ->
             { Id = Uri.commit r c
               Time = c.Author.When
               Label = c.Message
               User = Uri.identity c
-              Used = FileVersion.from (c, c', r)
+              Used = FileVersion.from (Commit c,r)
               InformedBy =
                   [ for p in c.Parents -> Uri.commit r p ] }
     static member fromWorkingArea r = function

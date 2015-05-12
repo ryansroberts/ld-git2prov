@@ -33,7 +33,6 @@ let gatherProv r includeWorking since =
             yield! ax
         }
     Git.commits since r
-    |> Seq.pairwise
     |> Seq.map (Prov.Activity.fromCommit r)
     |> includeWorkingArea
 

@@ -22,7 +22,7 @@ type Path =
     | Path of string
     override x.ToString() =
         match x with
-        | Path p -> p
+          | Path p -> p
 
 let repo p = Repository(new LibGit2Sharp.Repository(p))
 
@@ -54,14 +54,15 @@ let workingArea =
             (Seq.concat
                  [ s.Added; s.Modified; s.Untracked; s.Staged; s.RenamedInIndex;
                    s.RenamedInWorkDir ] |> Seq.toList, Commit r.Head.Tip)
-let diff (c, c') = function
+let diff (Commit c) = function
   | Repository r ->
-    r.Diff.Compare<TreeChanges>(oldTree = c, newTree = c')
+    let c' = match (Seq.isEmpty (c.Parents)) with
+             | true -> (null :> LibGit2Sharp.Tree )
+             | false -> (Seq.head (c.Parents)).Tree
+    r.Diff.Compare<TreeChanges>(oldTree = c', newTree = c.Tree)
 let diffs cx = function
     | Repository r ->
         cx
-        |> Seq.map tree
-        |> Seq.pairwise
         |> Seq.map diff
 let branchName = function
     | Repository r ->

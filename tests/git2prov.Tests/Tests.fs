@@ -21,14 +21,6 @@ let g2p args =
     ps.StandardOutput.BaseStream
 
 [<Fact>]
-let ``There are no changes from HEAD to HEAD``() =
-    clone "testrepo"
-    g2p [ Main.Path "testrepo"
-          ShowHistory
-          Since "HEAD" ]
-    |> approveGraph "HEADtoHEAD"
-
-[<Fact>]
 let ``Changes from HEAD to hash of previous commit``() =
     clone "testrepo"
     g2p [ Main.Path "testrepo"

@@ -36,18 +36,11 @@ let gatherProv r includeWorking since =
     |> Seq.map (Prov.Activity.fromCommit r)
     |> includeWorkingArea
 
-let branchNs (g : VDS.RDF.IGraph, r) =
-    let name = Git.directoryName (Git.workingDirectory r)
-    let tree = Git.branchName r
-    let git2prov = sprintf "http://nice.org.uk/git2prov/%s/tree/%s" name tree
-    g.NamespaceMap.AddNamespace("tree", VDS.RDF.UriFactory.Create git2prov)
-
 let writeProv repo showHistory showCompilation prov =
     let sio =System.Console.OpenStandardOutput()
     use fout = new System.IO.StreamWriter(sio)
     use g = new VDS.RDF.Graph()
-    RDF.ns.add (g, RDF.ns.git2prov)
-    branchNs (g, repo)
+    RDF.ns.add (g,"http://ld.nice.org.uk/prov")
     let history() =
         prov
         |> Seq.map (Translate.provHistory g)

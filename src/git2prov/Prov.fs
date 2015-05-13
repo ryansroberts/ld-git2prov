@@ -28,7 +28,7 @@ type Uri with
         Uri("git2prov", [ "entity"], Some ((short hash r) + ":" + p))
     static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
         Uri("git2prov", [ "workingarea" ], Some (sha f.FilePath))
-    static member specialisationOf (r, p) = Uri("git2prov",["resource"],Some (sha p))
+    static member specialisationOf (r, p) = Uri("ld",["resource"],Some (sha p))
 
 type FileVersion =
     { Id : Uri

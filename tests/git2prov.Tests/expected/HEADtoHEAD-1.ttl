@@ -1,32 +1,32 @@
-@base <http://nice.org.uk/prov/>.
+@base <http://ld.nice.org.uk/prov>.
 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix git2prov: <http://nice.org.uk/prov/>.
-@prefix base: <http://nice.org.uk/prov/>.
-@prefix compilation: <http://nice.org.uk/ns/compilation#>.
-@prefix tree: <http://nice.org.uk/git2prov//tree/master>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix base: <http://ld.nice.org.uk/prov>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
 
-<http://nice.org.uk/prov/commit#4c062a6> a prov:Activity;
-                                         rdfs:label """directory was added
+<http://ld.nice.org.uk/prov/commit#4c062a6> a prov:Activity;
+                                            rdfs:label """directory was added
 """;
-                                         prov:endedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
-                                         prov:informedBy <http://nice.org.uk/prov/commit#be3563a>;
-                                         prov:qualifiedAssociation [a prov:Association ; 
-                                                                    prov:agent <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
-                                                                    prov:hadRole "author, committer"],
-                                                                   [a prov:Association ; 
-                                                                    prov:agent <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
-                                                                    prov:hadRole "author, committer"];
-                                         prov:startedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
-                                         prov:uses <http://nice.org.uk/prov/entity#4c062a6:1/branch_file.txt>;
-                                         prov:wasAssociatedWith <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com>.
-<http://nice.org.uk/prov/entity#4c062a6:1/branch_file.txt> compilation:content <http://raw/4c062a6:1/branch_file.txt>;
-                                                           compilation:path "1/branch_file.txt";
-                                                           a prov:Entity;
-                                                           prov:specializationOf <http://nice.org.uk/prov/resource#FEB4B406D96BAA0D0A39772B44D84A2E5826061CDB5959A1266151EA369F142C>;
-                                                           prov:wasAttributedTo <http://nice.org.uk/prov/user#gorbach.alexey@gmail.com>;
-                                                           prov:wasGeneratedBy <http://nice.org.uk/prov/commit#4c062a6>.
+                                            prov:endedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                            prov:informedBy <http://ld.nice.org.uk/prov/commit#be3563a>;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"],
+                                                                      [a prov:Association ; 
+                                                                       prov:agent <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
+                                            prov:startedAtTime "2011-04-14T18:44:16.000000+03:00"^^xsd:dateTime;
+                                            prov:uses <http://ld.nice.org.uk/prov/entity#4c062a6:1/branch_file.txt>;
+                                            prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com>.
+<http://ld.nice.org.uk/prov/entity#4c062a6:1/branch_file.txt> compilation:content <http://raw/4c062a6:1/branch_file.txt>;
+                                                              compilation:path "1/branch_file.txt";
+                                                              a prov:Entity;
+                                                              prov:specializationOf <http://ld.nice.org.uk/resource#FEB4B406D96BAA0D0A39772B44D84A2E5826061CDB5959A1266151EA369F142C>;
+                                                              prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com>;
+                                                              prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#4c062a6>.

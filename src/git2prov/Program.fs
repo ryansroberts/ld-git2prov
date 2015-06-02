@@ -4,7 +4,7 @@ open Nessos.UnionArgParser
 open common
 
 type Arguments =
-  | Server of int
+  | SpecialisationOf of string
   | IncludeWorkingArea
   | ShowHistory
   | ShowCompilation
@@ -14,7 +14,7 @@ type Arguments =
   interface IArgParserTemplate with
     member s.Usage =
       match s with
-      | Server p -> "Run prov server on specified port"
+      | SpecialisationOf _ -> "Show uri of the resource represented by the file at path"
       | IncludeWorkingArea _ ->
         "Include prov activity for uncommitted and staged "
       | ShowHistory _ -> "Show provenence for included git history"
@@ -78,9 +78,7 @@ let main argv =
   let showHistory = args.Contains(<@ ShowHistory @>)
   let showCompilation = args.Contains(<@ ShowCompilation @>)
   let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
-  match args.GetResult(<@ Server @>, defaultValue = 0) with
-  | 0 ->
-    gatherProv repo includeWorking since
-    |> writeProv repo showHistory showCompilation
-  | port -> Http.serve repo port
+
+  gatherProv repo includeWorking since
+  |> writeProv repo showHistory showCompilation
   0

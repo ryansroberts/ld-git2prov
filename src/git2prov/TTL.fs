@@ -63,6 +63,20 @@ let provCompilation (g : IGraph) (act : Activity) =
     triples (puri act.Id, [qn "prov:informedBy", puri i ])
   g
 
+
+let sameAs (g:IGraph) (t : TreeFile) =
+  let triples = triples g
+  let puri = puri g
+  let date = date g
+  let a = a g
+  let qn = qn g
+  let blank = blank g
+  let literal = literal g
+  triples (puri t.SpecialisationOf,
+           [qn "owl:sameAs",puri t.Id
+            qn "compilation:tree", literal t.Hash])
+  g
+
 let ttl (tw : System.IO.TextWriter) g =
   let writer = CompressingTurtleWriter(WriterCompressionLevel.High)
   writer.Save(g, tw)

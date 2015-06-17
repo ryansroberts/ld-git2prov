@@ -8,6 +8,9 @@ let (++) a b = System.IO.Path.Combine(a, b)
 type Commit =
   | Commit of LibGit2Sharp.Commit
 
+type Tree =
+  | Tree of LibGit2Sharp.Tree
+
 type Repository =
   | Repository of LibGit2Sharp.Repository
 
@@ -46,7 +49,7 @@ let commits (since : string) r =
     }
 
 let tree = function
-  | Commit c -> c.Tree
+  | Commit c -> (Tree c.Tree)
 let workingArea =
   function
   | Repository r ->

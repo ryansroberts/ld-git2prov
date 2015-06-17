@@ -45,6 +45,15 @@ let ``Changes for all history``() =
           Since "all"]
     |> approveGraph "AllHistory"
 
+[<Fact>]
+let ``Sameas for head``() =
+
+  clone "testrepo"
+  g2p [ Main.Path "testrepo"
+        Tree "HEAD"]
+  |> approveGraph "sameas"
+
+
 let ``History with compilation``() =
     clone "testrepo"
     g2p [ Main.Path "testrepo"

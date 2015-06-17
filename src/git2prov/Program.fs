@@ -4,7 +4,7 @@ open Nessos.UnionArgParser
 open common
 
 type Arguments =
-  | SpecialisationOf of string
+  | Tree of string
   | IncludeWorkingArea
   | ShowHistory
   | ShowCompilation
@@ -14,7 +14,7 @@ type Arguments =
   interface IArgParserTemplate with
     member s.Usage =
       match s with
-      | SpecialisationOf _ -> "Show uri of the resource represented by the file at path"
+      | Tree _ -> "sameAs statements for reachable resources at the specified version"
       | IncludeWorkingArea _ ->
         "Include prov activity for uncommitted and staged "
       | ShowHistory _ -> "Show provenence for included git history"
@@ -61,6 +61,18 @@ let writeProv repo showHistory showCompilation prov =
   g |> Translate.ttl fout
   ()
 
+let writeSameAs xs =
+  let sio = System.Console.OpenStandardOutput()
+  use fout = new System.IO.StreamWriter(sio)
+  use g = new VDS.RDF.Graph()
+  RDF.ns.add (g, "http://ld.nice.org.uk/prov")
+  xs
+  |> Seq.map (Translate.sameAs g)
+  |> Seq.iter (fun _ -> ())
+
+  g |> Translate.ttl fout
+  ()
+
 [<EntryPoint>]
 let main argv =
   let toLower (s : string) = s.ToLower()
@@ -71,14 +83,25 @@ let main argv =
   if ((argv.Length = 2 && paramIsHelp argv.[1]) || argv.Length = 1) then
     printfn """Usage: git2prov [options]
                  %s""" (parser.Usage())
-    exit 1
+    exit 0
+
+
   let args = parser.Parse argv
   let repo = Git.repo (args.GetResult(<@ Path @>, defaultValue = "."))
-  let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
-  let showHistory = args.Contains(<@ ShowHistory @>)
-  let showCompilation = args.Contains(<@ ShowCompilation @>)
-  let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
 
-  gatherProv repo includeWorking since
-  |> writeProv repo showHistory showCompilation
-  0
+  if args.Contains(<@ Tree  @>) then
+    let tree = args.GetResult(<@ Tree @>)
+    Git.commits tree repo
+    |> Seq.head
+    |> Prov.TreeFile.from repo
+    |> writeSameAs
+    0
+  else
+    let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
+    let showHistory = args.Contains(<@ ShowHistory @>)
+    let showCompilation = args.Contains(<@ ShowCompilation @>)
+    let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
+
+    gatherProv repo includeWorking since
+    |> writeProv repo showHistory showCompilation
+    0

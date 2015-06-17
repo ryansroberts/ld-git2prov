@@ -28,6 +28,25 @@ type Uri with
     Uri("git2prov", [ "workingarea" ], Some(sha f.FilePath))
   static member specialisationOf (r, p) = Uri("ld", [ "resource" ], Some(sha p))
 
+
+type TreeFile = {
+    Id : Uri
+    Path : Path
+    SpecialisationOf : Uri
+    Hash : string
+  } with
+  static member from r (Commit c) =
+    let (Tree t) = tree (Commit c)
+    seq {
+        for f in t do
+        yield {
+        Id = Uri.versionedcontent c (f.Path) r
+        Path = Path(f.Path)
+        SpecialisationOf = Uri.specialisationOf (r, f.Path)
+        Hash = (short c r)
+        }
+    }
+
 type FileVersion =
   { Id : Uri
     Content : Git.Content
@@ -36,8 +55,7 @@ type FileVersion =
     SpecialisationOf : Uri
     Time : System.DateTimeOffset
     Commit : Uri
-    AttributedTo : Uri }
-
+    AttributedTo : Uri } with
   static member from (Commit c, r) =
     seq {
       let d = diff (Commit c) r
@@ -63,7 +81,7 @@ type FileVersion =
                 Commit = Uri.workingarea
                 Time = System.DateTimeOffset.Now
                 AttributedTo = Uri.identity() }
-    }
+      }
 
 type Activity =
   { Id : Uri

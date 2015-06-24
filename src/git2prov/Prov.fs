@@ -37,8 +37,15 @@ type TreeFile = {
   } with
   static member from r (Commit c) =
     let (Tree t) = tree (Commit c)
+    let rec iterT (t:LibGit2Sharp.Tree) = seq {
+      for t' in t do
+      match t'.TargetType with
+      | LibGit2Sharp.TreeEntryTargetType.Blob -> yield t'
+      | LibGit2Sharp.TreeEntryTargetType.Tree -> yield! iterT (t'.Target :?> LibGit2Sharp.Tree)
+    }
+
     seq {
-        for f in t do
+        for f in (iterT t) do
         yield {
         Id = Uri.versionedcontent c (f.Path) r
         Path = Path(f.Path)

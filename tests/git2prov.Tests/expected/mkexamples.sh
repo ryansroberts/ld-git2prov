@@ -8,3 +8,5 @@ mono ../../../bin/git2prov.exe --path ../../../bin/testrepo --showhistory --sinc
 mono ../../../bin/git2prov.exe --path ../../../bin/testrepo --showhistory --since all  > withcontent.ttl
 mono ../../../bin/git2prov.exe --path ../../../bin/testrepo --showhistory --since all --showcompilation > withcompilation.ttl
 mono ../../../bin/git2prov.exe --path ../../../bin/testrepo --showhistory --tree HEAD > sameas.ttl
+touch ../../../bin/testrepo/workingareafile.md
+mono ../../../bin/git2prov.exe --path ../../../bin/testrepo --includeworkingarea > workingarea.ttl

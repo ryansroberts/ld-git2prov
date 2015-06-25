@@ -25,39 +25,5 @@ let ``Changes from HEAD to hash of previous commit``() =
     clone "testrepo"
     g2p [ Main.Path "testrepo"
           ShowHistory
-          Since "be3563a" ]
-    |> approveGraph "HEADtobe3"
-
-[<Fact>]
-let ``Changes from HEAD to alias of previous commit``() =
-    clone "testrepo"
-    g2p [ Main.Path "testrepo"
-          ShowHistory
-          Since "HEAD~1" ]
-    |> approveGraph "HEADtoHEAD-1"
-
-[<Fact>]
-let ``Changes for all history``() =
-
-    clone "testrepo"
-    g2p [ Main.Path "testrepo"
-          ShowHistory
-          Since "all"]
-    |> approveGraph "AllHistory"
-
-[<Fact>]
-let ``Sameas for head``() =
-
-  clone "testrepo"
-  g2p [ Main.Path "testrepo"
-        Tree "HEAD"]
-  |> approveGraph "sameas"
-
-
-let ``History with compilation``() =
-    clone "testrepo"
-    g2p [ Main.Path "testrepo"
-          ShowHistory
-          ShowCompilation
-          Since "all"]
-    |> approveGraph "withcompilation"
+          IncludeWorkingArea
+          Since "all" ]

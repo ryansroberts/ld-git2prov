@@ -13,7 +13,7 @@ module RDF =
       match x with
       | Uri(q, p, Some r) -> sprintf "%s:%s#%s" q (List.reduce (++) p) r
       | Uri(q, p, None) -> sprintf "%s:/%s" q (List.reduce (++) p)
-
+    static member fragment (Uri(_,_,Some f)) = f
   module ns =
     let prov = "http://www.w3.org/ns/prov#"
     let owl = "http://www.w3.org/2002/07/owl#"

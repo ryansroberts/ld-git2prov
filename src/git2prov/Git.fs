@@ -45,7 +45,6 @@ let commits (since : string) r =
                     (Until = c,
                      SortBy = (CommitSortStrategies.Topological
                                ||| CommitSortStrategies.Reverse))) -> Commit c
-      yield Commit(r.Head.Tip)
     }
 
 let tree = function

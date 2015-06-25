@@ -1,0 +1,14 @@
+@base <http://ld.nice.org.uk/prov>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix base: <http://ld.nice.org.uk/prov>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
+
+<http://ld.nice.org.uk/resource#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544> compilation:tree "ryanroberts-workingarea";
+                                                                                                  owl:sameAs <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>.

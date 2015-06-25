@@ -38,7 +38,7 @@ let provHistory (g : IGraph) (act : Activity) =
     match u.Content with
     | Working x -> triples (puri u.Id, [ (qn "compilation:content", suri x) ])
     | Revision x -> triples (puri u.Id, [ (qn "compilation:content", suri x) ])
-  g
+  ()
 
 let provCompilation (g : IGraph) (act : Activity) =
   let triples = triples g
@@ -49,19 +49,19 @@ let provCompilation (g : IGraph) (act : Activity) =
   let blank = blank g
   let literal = literal g
   triples (puri act.Id,
-           [ (a, qn "compilation:Compilation")
-             (qn "prov:startedAtTime", date act.Time)
-             (qn "prov:wasAssociatedWith", puri act.User)
-             (qn "rdfs:label", literal act.Label)
-             (qn "prov:qualifiedAssociation",
-              blank [ (a, qn "prov:Association")
-                      (qn "prov:agent", puri act.User)
-                      (qn "prov:hadRole", literal "initiator") ]) ])
+            [ (a, qn "compilation:Compilation")
+              (qn "prov:startedAtTime", date act.Time)
+              (qn "prov:wasAssociatedWith", puri act.User)
+              (qn "rdfs:label", literal act.Label)
+              (qn "prov:qualifiedAssociation",
+                blank [(a, qn "prov:Association")
+                       (qn "prov:agent", puri act.User)
+                       (qn "prov:hadRole", literal "initiator") ]) ])
   for u in act.Used do
-    triples (puri act.Id, [ qn "prov:uses", puri u.Id ])
+        triples (puri act.Id, [ qn "prov:uses", puri u.Id ])
   for i in act.InformedBy do
-    triples (puri act.Id, [qn "prov:informedBy", puri i ])
-  g
+        triples (puri act.Id, [qn "prov:informedBy", puri i ])
+  ()
 
 
 let sameAs (g:IGraph) (t : TreeFile) =
@@ -75,8 +75,9 @@ let sameAs (g:IGraph) (t : TreeFile) =
   triples (puri t.SpecialisationOf,
            [qn "owl:sameAs",puri t.Id
             qn "compilation:tree", literal t.Hash])
-  g
+  ()
 
-let ttl (tw : System.IO.TextWriter) g =
-  let writer = CompressingTurtleWriter(WriterCompressionLevel.High)
-  writer.Save(g, tw)
+let ttl (s : System.IO.FileStream) g =
+  let writer =  CompressingTurtleWriter(WriterCompressionLevel.High)
+  use tw = new System.IO.StreamWriter(s)
+  writer.Save(g,tw)

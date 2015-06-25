@@ -1,0 +1,39 @@
+@base <http://ld.nice.org.uk/prov>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix base: <http://ld.nice.org.uk/prov>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
+
+<http://ld.nice.org.uk/prov/commit#c47800c> a prov:Activity;
+                                            rdfs:label """branch commit one
+""";
+                                            prov:endedAtTime "2010-05-25T11:58:14.000000-07:00"^^xsd:dateTime;
+                                            prov:informedBy <http://ld.nice.org.uk/prov/commit#5b5b025>;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
+                                            prov:startedAtTime "2010-05-25T11:58:14.000000-07:00"^^xsd:dateTime;
+                                            prov:uses <http://ld.nice.org.uk/prov/entity#c47800c:branch_file.txt>;
+                                            prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
+<http://ld.nice.org.uk/prov/compilation#734D90314D877AB5BCBF2E599D46FBFD87109491DBA95B5934A6695516EFCA84> a compilation:Compilation;
+                                                                                                          rdfs:label """branch commit one
+""";
+                                                                                                          prov:informedBy <http://ld.nice.org.uk/prov/commit#c47800c>;
+                                                                                                          prov:qualifiedAssociation [a prov:Association ; 
+                                                                                                                                     prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
+                                                                                                                                     prov:hadRole "initiator"];
+                                                                                                          prov:startedAtTime "2015-06-25T13:52:00.711207+01:00"^^xsd:dateTime;
+                                                                                                          prov:uses <http://ld.nice.org.uk/prov/entity#c47800c:branch_file.txt>;
+                                                                                                          prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
+<http://ld.nice.org.uk/prov/entity#c47800c:branch_file.txt> compilation:content <http://raw/c47800c:branch_file.txt>;
+                                                            compilation:path "branch_file.txt";
+                                                            a prov:Entity;
+                                                            prov:specializationOf <http://ld.nice.org.uk/resource#15883F91D550194A346E75D65877879413BF84257FBC47509B49DDE06254C434>;
+                                                            prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
+                                                            prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#c47800c>.

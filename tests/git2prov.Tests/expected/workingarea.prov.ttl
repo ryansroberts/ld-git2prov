@@ -1,0 +1,37 @@
+@base <http://ld.nice.org.uk/prov>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix base: <http://ld.nice.org.uk/prov>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
+
+<http://ld.nice.org.uk/prov/commit#workingarea> a prov:Activity;
+                                                rdfs:label "Uncommitted changes from working area";
+                                                prov:endedAtTime "2015-06-25T09:22:43.677185+01:00"^^xsd:dateTime;
+                                                prov:informedBy <http://ld.nice.org.uk/prov/commit#4c062a6>;
+                                                prov:qualifiedAssociation [a prov:Association ; 
+                                                                           prov:agent <http://ld.nice.org.uk/prov/user#ryanroberts> ; 
+                                                                           prov:hadRole "author, committer"];
+                                                prov:startedAtTime "2015-06-25T09:22:43.677185+01:00"^^xsd:dateTime;
+                                                prov:uses <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>;
+                                                prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#ryanroberts>.
+<http://ld.nice.org.uk/prov/compilation#FA6324CBB24744E346697FA8AB414BD83BE1297D914E53B81CBE295288C43342> a compilation:Compilation;
+                                                                                                          rdfs:label "Uncommitted changes from working area";
+                                                                                                          prov:informedBy <http://ld.nice.org.uk/prov/commit#workingarea>;
+                                                                                                          prov:qualifiedAssociation [a prov:Association ; 
+                                                                                                                                     prov:agent <http://ld.nice.org.uk/prov/user#ryanroberts> ; 
+                                                                                                                                     prov:hadRole "initiator"];
+                                                                                                          prov:startedAtTime "2015-06-25T09:22:43.747529+01:00"^^xsd:dateTime;
+                                                                                                          prov:uses <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>;
+                                                                                                          prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#ryanroberts>.
+<http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544> compilation:content <file:///Users/ryanroberts/code/ld-git2prov/bin/testrepo/workingareafile.md>;
+                                                                                                          compilation:path "workingareafile.md";
+                                                                                                          a prov:Entity;
+                                                                                                          prov:specializationOf <http://ld.nice.org.uk/resource#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>;
+                                                                                                          prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#ryanroberts>;
+                                                                                                          prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#workingarea>.

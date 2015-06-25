@@ -17,7 +17,7 @@ type Uri with
   static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
   static member compilation c =
     Uri("git2prov", [ "compilation" ], Some(sha (string c)))
-  static member workingarea = Uri("git2prov", [ "commit" ], Some("workingarea"))
+  static member workingarea = Uri("git2prov", [ "commit" ], Some(System.Environment.UserName + "-workingarea"))
   static member identity (c : LibGit2Sharp.Commit) =
     Uri("git2prov", [ "user" ], Some c.Author.Email)
   static member identity() =
@@ -28,8 +28,7 @@ type Uri with
     Uri("git2prov", [ "workingarea" ], Some(sha f.FilePath))
   static member specialisationOf (r, p) = Uri("ld", [ "resource" ], Some(sha p))
 
-
-type TreeFile = {
+and TreeFile = {
     Id : Uri
     Path : Path
     SpecialisationOf : Uri
@@ -47,12 +46,25 @@ type TreeFile = {
     seq {
         for f in (iterT t) do
         yield {
-        Id = Uri.versionedcontent c (f.Path) r
-        Path = Path(f.Path)
-        SpecialisationOf = Uri.specialisationOf (r, f.Path)
-        Hash = (short c r)
+            Id = Uri.versionedcontent c (f.Path) r
+            Path = Path(f.Path)
+            SpecialisationOf = Uri.specialisationOf (r, f.Path)
+            Hash = (short c r)
         }
     }
+  static member fromWorkingArea r = function
+    | WorkingArea(wx, Commit c) -> seq {
+      let working = [for w in wx do
+                       yield {Id = Uri.workingAreaFile w
+                              Path = Path(w.FilePath)
+                              SpecialisationOf = Uri.specialisationOf (r, w.FilePath)
+                              Hash = System.Environment.UserName + "-workingarea"}]
+      let workingPaths = Set.ofList (working |> List.map(fun w -> w.Path))
+      let notChangedInWorking f = not(Set.contains f.Path workingPaths)
+      yield! working
+      yield! TreeFile.from r (Commit c)
+             |> Seq.filter notChangedInWorking
+     }
 
 type FileVersion =
   { Id : Uri
@@ -114,20 +126,9 @@ type Activity =
         User = Uri.identity()
         Used = FileVersion.from (wx, r)
         InformedBy = [ Uri.commit r c ] }
-  static member concat ax =
-    let informed = ax
-                    |> Seq.map (fun x -> x.Id)
-                    |> Seq.toArray
-    let used = ax
-                |> Seq.map (fun a -> a.Used)
-                |> Seq.concat
-                |> Seq.sortBy (fun a -> a.Time)
-                |> Seq.groupBy (fun a -> a.SpecialisationOf)
-                |> Seq.map (fun (_, dx) -> dx |> Seq.last)
-    { Id = Uri.compilation (informed.[informed.Length - 1])
-      Time = System.DateTimeOffset.Now
-      Label =
-        "Change this to a compilation message that is actualy useful to somebody"
-      User = Uri.identity()
-      Used = used
-      InformedBy = informed}
+  static member compilation a = 
+      {a with
+        Id = Uri.compilation (string a.Id)
+        Time = System.DateTimeOffset.Now
+        InformedBy = [a.Id]
+      }

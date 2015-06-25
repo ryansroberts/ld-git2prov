@@ -1,0 +1,38 @@
+@base <http://ld.nice.org.uk/prov>.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix base: <http://ld.nice.org.uk/prov>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
+
+<http://ld.nice.org.uk/prov/commit#8496071> a prov:Activity;
+                                            rdfs:label """testing
+""";
+                                            prov:endedAtTime "2010-05-08T16:13:06.000000-07:00"^^xsd:dateTime;
+                                            prov:qualifiedAssociation [a prov:Association ; 
+                                                                       prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
+                                                                       prov:hadRole "author, committer"];
+                                            prov:startedAtTime "2010-05-08T16:13:06.000000-07:00"^^xsd:dateTime;
+                                            prov:uses <http://ld.nice.org.uk/prov/entity#8496071:README>;
+                                            prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
+<http://ld.nice.org.uk/prov/compilation#DADEAA1F882F59066314A6E5A994035AFF9F00BB8765654A415E09255B7B07D2> a compilation:Compilation;
+                                                                                                          rdfs:label """testing
+""";
+                                                                                                          prov:informedBy <http://ld.nice.org.uk/prov/commit#8496071>;
+                                                                                                          prov:qualifiedAssociation [a prov:Association ; 
+                                                                                                                                     prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
+                                                                                                                                     prov:hadRole "initiator"];
+                                                                                                          prov:startedAtTime "2015-06-25T13:52:00.690620+01:00"^^xsd:dateTime;
+                                                                                                          prov:uses <http://ld.nice.org.uk/prov/entity#8496071:README>;
+                                                                                                          prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
+<http://ld.nice.org.uk/prov/entity#8496071:README> compilation:content <http://raw/8496071:README>;
+                                                   compilation:path "README";
+                                                   a prov:Entity;
+                                                   prov:specializationOf <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
+                                                   prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
+                                                   prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#8496071>.

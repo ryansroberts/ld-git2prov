@@ -2,75 +2,67 @@ module Main
 
 open Nessos.UnionArgParser
 open common
+open common.RDF
 
 type Arguments =
   | Tree of string
   | IncludeWorkingArea
   | ShowHistory
-  | ShowCompilation
   | BaseUri of string
   | Path of string
   | Since of string
+  | Output of string
   interface IArgParserTemplate with
     member s.Usage =
       match s with
       | Tree _ -> "sameAs statements for reachable resources at the specified version"
-      | IncludeWorkingArea _ ->
-        "Include prov activity for uncommitted and staged "
-      | ShowHistory _ -> "Show provenence for included git history"
-      | ShowCompilation _ ->
-        "Generate a compilation activity for included git history"
+      | IncludeWorkingArea _ -> "Include prov activity for uncommitted and staged "
+      | ShowHistory -> "Include git history"
       | BaseUri s -> "Base uri for generated provenence"
       | Path p -> "Path to a git repository"
       | Since r -> "Commit ref to generate PROV from"
+      | Output o -> "Where to write graphs"
 
-let gatherProv r includeWorking since =
-  let includeWorkingArea ax =
-    seq {
-      match includeWorking with
-      | true -> yield Prov.Activity.fromWorkingArea r (Git.workingArea r)
-      | false -> ()
-      yield! ax
-    }
-  Git.commits since r
-  |> Seq.map (Prov.Activity.fromCommit r)
-  |> includeWorkingArea
+let (++) a b = System.IO.Path.Combine (a,b)
 
-let writeProv repo showHistory showCompilation prov =
-  let sio = System.Console.OpenStandardOutput()
-  use fout = new System.IO.StreamWriter(sio)
-  use g = new VDS.RDF.Graph()
+let historyName b (a:Prov.Activity) = b ++ (sprintf "%s.prov.ttl" (Uri.fragment a.Id))
+let treeName b (a:Prov.Activity) = b ++ (sprintf "%s.tree.prov.ttl" (Uri.fragment a.Id))
+
+let working r =
+  let w = Git.workingArea r
+  (Prov.Activity.fromWorkingArea r w,Prov.TreeFile.fromWorkingArea r w)
+
+let history r since =
+   Git.commits since r
+   |> Seq.map (fun c -> (Prov.Activity.fromCommit r c,Prov.TreeFile.from r c))
+
+let sameAs (a:Prov.Activity) (xs:Prov.TreeFile seq) =
+  let g = new VDS.RDF.Graph()
+  g.BaseUri <- System.Uri("http://ld.nice.org.uk/prov/tree#" + (Uri.fragment (a.Id)))
   RDF.ns.add (g, "http://ld.nice.org.uk/prov")
-  let history() =
-    prov
-    |> Seq.map (Translate.provHistory g)
-    |> Seq.iter (fun _ -> ())
 
-  let compilation() =
-    prov
-    |> Prov.Activity.concat
-    |> Translate.provCompilation g
-    |> ignore
+  for x in xs do
+   Translate.sameAs g x |> ignore
+  g
 
-  match showHistory, showCompilation with
-  | true, _ | _, true -> history()
-  | _, _ -> ()
-  match showCompilation with
-  | true -> compilation()
-  | false -> ()
-  g |> Translate.ttl fout
-  ()
+let writeProv path repo showHistory includeWorking since =
+  let working = if includeWorking then seq {yield working repo} else Seq.empty 
+  let history = if showHistory then ( history repo since ) else Seq.empty
 
-let writeSameAs xs =
-  let sio = System.Console.OpenStandardOutput()
-  use fout = new System.IO.StreamWriter(sio)
-  use g = new VDS.RDF.Graph()
-  RDF.ns.add (g, "http://ld.nice.org.uk/prov")
-  xs
-  |> Seq.map (Translate.sameAs g)
-  |> Seq.iter (fun _ -> ())
+  for (a,xs) in Seq.concat [working;history] do
+    use hout = System.IO.File.OpenWrite (historyName path a)
+    use tout = System.IO.File.OpenWrite (treeName path a)
+    use g = new VDS.RDF.Graph()
+    RDF.ns.add (g, "http://ld.nice.org.uk/prov")
 
-  g |> Translate.ttl fout
+    Translate.provHistory g a
+    Translate.provCompilation g (Prov.Activity.compilation a)
+    Translate.ttl hout g
+
+    sameAs a xs
+    |> Translate.ttl tout
+
+    printfn "%s" (Uri.fragment a.Id)
   ()
 
 [<EntryPoint>]
@@ -89,19 +81,10 @@ let main argv =
   let args = parser.Parse argv
   let repo = Git.repo (args.GetResult(<@ Path @>, defaultValue = "."))
 
-  if args.Contains(<@ Tree  @>) then
-    let tree = args.GetResult(<@ Tree @>)
-    Git.commits tree repo
-    |> Seq.head
-    |> Prov.TreeFile.from repo
-    |> writeSameAs
-    0
-  else
-    let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
-    let showHistory = args.Contains(<@ ShowHistory @>)
-    let showCompilation = args.Contains(<@ ShowCompilation @>)
-    let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
+  let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
+  let showHistory = args.Contains(<@ ShowHistory @>)
+  let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
+  let output = args.GetResult(<@ Output @>, defaultValue = ".")
 
-    gatherProv repo includeWorking since
-    |> writeProv repo showHistory showCompilation
-    0
+  writeProv output repo showHistory includeWorking since
+  0

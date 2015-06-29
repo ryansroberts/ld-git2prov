@@ -13,6 +13,15 @@ let short sha = function
 let iso (date : System.DateTimeOffset) = date.ToString("o")
 let (++) a b = System.IO.Path.Combine(a, b)
 
+let hashFor p r =
+  let xs = follow (Path p) r
+  if Seq.isEmpty xs then
+    sha p
+  else
+    let (LogEntry l) = Seq.last xs
+    sha l.Path
+
+
 type Uri with
   static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
   static member compilation c =
@@ -22,11 +31,13 @@ type Uri with
     Uri("git2prov", [ "user" ], Some c.Author.Email)
   static member identity() =
     Uri("git2prov", [ "user" ], Some System.Environment.UserName)
-  static member versionedcontent hash p r =
-    Uri("git2prov", [ "entity" ], Some((short hash r) + ":" + p))
+  static member versionedcontent p r =
+    let hash = hashFor p r
+    Uri("git2prov", [ "entity" ], Some(hash + ":" + p))
   static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
     Uri("git2prov", [ "workingarea" ], Some(sha f.FilePath))
-  static member specialisationOf (r, p) = Uri("ld", [ "resource" ], Some(sha p))
+  static member specialisationOf (r,p) =
+    Uri("ld", [ "resource" ], Some (hashFor p r))
 
 and TreeFile = {
     Id : Uri
@@ -42,11 +53,10 @@ and TreeFile = {
       | LibGit2Sharp.TreeEntryTargetType.Blob -> yield t'
       | LibGit2Sharp.TreeEntryTargetType.Tree -> yield! iterT (t'.Target :?> LibGit2Sharp.Tree)
     }
-
     seq {
         for f in (iterT t) do
         yield {
-            Id = Uri.versionedcontent c (f.Path) r
+            Id = Uri.versionedcontent (f.Path) r
             Path = Path(f.Path)
             SpecialisationOf = Uri.specialisationOf (r, f.Path)
             Hash = (short c r)
@@ -79,11 +89,11 @@ type FileVersion =
     seq {
       let d = diff (Commit c) r
       for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
-        yield { Id = Uri.versionedcontent c (f.Path) r
+        yield { Id = Uri.versionedcontent (f.Path) r
                 Content = Git.content (short c r) (f.Path) r
                 Path = Path(f.Path)
                 PreviousVersion = Some f.OldOid.Sha
-                SpecialisationOf = Uri.specialisationOf (r, f.Path)
+                SpecialisationOf = Uri.specialisationOf (r,f.Path)
                 Commit = Uri.commit r c
                 Time = c.Author.When
                 AttributedTo = Uri.identity c }

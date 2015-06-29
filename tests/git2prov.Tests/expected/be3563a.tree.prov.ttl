@@ -10,9 +10,6 @@
 @prefix ld: <http://ld.nice.org.uk/>.
 @prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
 
-<http://ld.nice.org.uk/resource#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313> compilation:tree "be3563a";
-                                                                                                  owl:sameAs <http://ld.nice.org.uk/prov/entity#be3563a:new.txt>.
-<http://ld.nice.org.uk/resource#15883F91D550194A346E75D65877879413BF84257FBC47509B49DDE06254C434> compilation:tree "be3563a";
-                                                                                                  owl:sameAs <http://ld.nice.org.uk/prov/entity#be3563a:branch_file.txt>.
-<http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900> compilation:tree "be3563a";
-                                                                                                  owl:sameAs <http://ld.nice.org.uk/prov/entity#be3563a:README>.
+<http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README> <http://ld.nice.org.uk/ns/compilation#tree> "be3563a".
+<http://ld.nice.org.uk/prov/entity#15883F91D550194A346E75D65877879413BF84257FBC47509B49DDE06254C434:branch_file.txt> <http://ld.nice.org.uk/ns/compilation#tree> "be3563a".
+<http://ld.nice.org.uk/prov/entity#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313:new.txt> <http://ld.nice.org.uk/ns/compilation#tree> "be3563a".

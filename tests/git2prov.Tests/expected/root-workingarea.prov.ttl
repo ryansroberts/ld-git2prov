@@ -12,12 +12,12 @@
 
 <http://ld.nice.org.uk/prov/commit#ryanroberts-workingarea> a prov:Activity;
                                                             rdfs:label "Uncommitted changes from working area";
-                                                            prov:endedAtTime "2015-06-25T13:52:01.055895+01:00"^^xsd:dateTime;
+                                                            prov:endedAtTime "2015-06-29T23:52:09.833624+01:00"^^xsd:dateTime;
                                                             prov:informedBy <http://ld.nice.org.uk/prov/commit#4c062a6>;
                                                             prov:qualifiedAssociation [a prov:Association ; 
                                                                                        prov:agent <http://ld.nice.org.uk/prov/user#ryanroberts> ; 
                                                                                        prov:hadRole "author, committer"];
-                                                            prov:startedAtTime "2015-06-25T13:52:01.055895+01:00"^^xsd:dateTime;
+                                                            prov:startedAtTime "2015-06-29T23:52:09.833624+01:00"^^xsd:dateTime;
                                                             prov:uses <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>;
                                                             prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#ryanroberts>.
 <http://ld.nice.org.uk/prov/compilation#5298650C63F4539D97820D350190B220F3A9961FFDCC7E6CDE19D70EBE432AF5> a compilation:Compilation;
@@ -26,7 +26,7 @@
                                                                                                           prov:qualifiedAssociation [a prov:Association ; 
                                                                                                                                      prov:agent <http://ld.nice.org.uk/prov/user#ryanroberts> ; 
                                                                                                                                      prov:hadRole "initiator"];
-                                                                                                          prov:startedAtTime "2015-06-25T13:52:01.126492+01:00"^^xsd:dateTime;
+                                                                                                          prov:startedAtTime "2015-06-29T23:52:09.917667+01:00"^^xsd:dateTime;
                                                                                                           prov:uses <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544>;
                                                                                                           prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#ryanroberts>.
 <http://ld.nice.org.uk/prov/workingarea#CF177C7F67B76E5F3CDB911B2D4FAD1F596D23EA4154808E1A15759FE4F9A544> compilation:content <file:///Users/ryanroberts/code/ld-git2prov/bin/testrepo/workingareafile.md>;

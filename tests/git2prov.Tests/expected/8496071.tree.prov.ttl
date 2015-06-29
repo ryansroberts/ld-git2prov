@@ -10,5 +10,4 @@
 @prefix ld: <http://ld.nice.org.uk/>.
 @prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
 
-<http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900> compilation:tree "8496071";
-                                                                                                  owl:sameAs <http://ld.nice.org.uk/prov/entity#8496071:README>.
+<http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README> <http://ld.nice.org.uk/ns/compilation#tree> "8496071".

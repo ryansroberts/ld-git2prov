@@ -27,6 +27,9 @@ type Path =
     match x with
     | Path p -> p
 
+type LogEntry =
+  | LogEntry of LibGit2Sharp.LogEntry
+
 let repo p = Repository(new LibGit2Sharp.Repository(p))
 
 let commits (since : string) r =
@@ -47,6 +50,7 @@ let commits (since : string) r =
                                ||| CommitSortStrategies.Reverse))) -> Commit c
     }
 
+let follow (Path p) (Repository r) = r.Commits.QueryBy(p) |> Seq.map LogEntry
 let tree = function
   | Commit c -> (Tree c.Tree)
 let workingArea =

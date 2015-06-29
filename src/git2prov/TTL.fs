@@ -72,9 +72,8 @@ let sameAs (g:IGraph) (t : TreeFile) =
   let qn = qn g
   let blank = blank g
   let literal = literal g
-  triples (puri t.SpecialisationOf,
-           [qn "owl:sameAs",puri t.Id
-            qn "compilation:tree", literal t.Hash])
+  triples (puri t.Id,
+           [qn "compilation:tree", literal t.Hash])
   ()
 
 let ttl (s : System.IO.FileStream) g =

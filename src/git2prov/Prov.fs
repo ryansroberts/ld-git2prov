@@ -43,7 +43,7 @@ and TreeFile = {
     Id : Uri
     Path : Path
     SpecialisationOf : Uri
-    Hash : string
+    Tree : Uri
   } with
   static member from r (Commit c) =
     let (Tree t) = tree (Commit c)
@@ -59,7 +59,7 @@ and TreeFile = {
             Id = Uri.versionedcontent (f.Path) r
             Path = Path(f.Path)
             SpecialisationOf = Uri.specialisationOf (r, f.Path)
-            Hash = (short c r)
+            Tree = Uri.commit r c
         }
     }
   static member fromWorkingArea r = function
@@ -68,7 +68,7 @@ and TreeFile = {
                        yield {Id = Uri.workingAreaFile w
                               Path = Path(w.FilePath)
                               SpecialisationOf = Uri.specialisationOf (r, w.FilePath)
-                              Hash = System.Environment.UserName + "-workingarea"}]
+                              Tree = Uri.workingarea}]
       let workingPaths = Set.ofList (working |> List.map(fun w -> w.Path))
       let notChangedInWorking f = not(Set.contains f.Path workingPaths)
       yield! working

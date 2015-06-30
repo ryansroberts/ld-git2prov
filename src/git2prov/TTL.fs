@@ -73,7 +73,7 @@ let sameAs (g:IGraph) (t : TreeFile) =
   let blank = blank g
   let literal = literal g
   triples (puri t.Id,
-           [qn "compilation:tree", literal t.Hash])
+           [qn "compilation:tree", puri t.Tree])
   ()
 
 let ttl (s : System.IO.FileStream) g =

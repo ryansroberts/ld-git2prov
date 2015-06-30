@@ -31,9 +31,12 @@ type Uri with
     Uri("git2prov", [ "user" ], Some c.Author.Email)
   static member identity() =
     Uri("git2prov", [ "user" ], Some System.Environment.UserName)
-  static member versionedcontent p r =
-    let hash = hashFor p r
-    Uri("git2prov", [ "entity" ], Some(hash + ":" + p))
+  static member versionedcontent (Commit c) p r =
+    Uri("git2prov", [ "entity" ], Some((short c r) + ":" + p))
+  static member lastVersionAtPath  p r =
+    let (LogEntry l) = follow (Path p) r |> Seq.head
+    Uri("git2prov", [ "entity" ], Some((short l.Commit r) + ":" + p))
+
   static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
     Uri("git2prov", [ "workingarea" ], Some(sha f.FilePath))
   static member specialisationOf (r,p) =
@@ -52,11 +55,12 @@ and TreeFile = {
       match t'.TargetType with
       | LibGit2Sharp.TreeEntryTargetType.Blob -> yield t'
       | LibGit2Sharp.TreeEntryTargetType.Tree -> yield! iterT (t'.Target :?> LibGit2Sharp.Tree)
+      | _ -> ()
     }
     seq {
         for f in (iterT t) do
         yield {
-            Id = Uri.versionedcontent (f.Path) r
+            Id = Uri.lastVersionAtPath (f.Path) r
             Path = Path(f.Path)
             SpecialisationOf = Uri.specialisationOf (r, f.Path)
             Tree = Uri.commit r c
@@ -89,7 +93,7 @@ type FileVersion =
     seq {
       let d = diff (Commit c) r
       for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
-        yield { Id = Uri.versionedcontent (f.Path) r
+        yield { Id = Uri.versionedcontent (Commit c) (f.Path) r
                 Content = Git.content (short c r) (f.Path) r
                 Path = Path(f.Path)
                 PreviousVersion = Some f.OldOid.Sha

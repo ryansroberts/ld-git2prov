@@ -15,21 +15,18 @@ module RDF =
       | Uri(q, p, None) -> sprintf "%s:/%s" q (List.reduce (++) p)
     static member fragment (Uri(_,_,Some f)) = f
   module ns =
-    let prov = "http://www.w3.org/ns/prov#"
-    let owl = "http://www.w3.org/2002/07/owl#"
-    let compilation = "http://ld.nice.org.uk/ns/compilation#"
-    let git2prov = "http://ld.nice.org.uk/prov/"
-    let ld = "http://ld.nice.org.uk/"
 
     let add (g : IGraph, baseUri) =
       g.BaseUri <- UriFactory.Create baseUri
-      g.NamespaceMap.AddNamespace("prov", UriFactory.Create prov)
-      g.NamespaceMap.AddNamespace("owl", UriFactory.Create owl)
-      g.NamespaceMap.AddNamespace("git2prov", UriFactory.Create git2prov)
-      g.NamespaceMap.AddNamespace("base", UriFactory.Create baseUri)
-      g.NamespaceMap.AddNamespace("ld", UriFactory.Create ld)
-      g.NamespaceMap.AddNamespace("compilation", UriFactory.Create compilation)
-
+      [( "prov" ,"http://www.w3.org/ns/prov#" )
+       ( "owl" ,"http://www.w3.org/2002/07/owl#" )
+       ( "compilation" ,"http://ld.nice.org.uk/ns/compilation#" )
+       ( "git2prov" ,"http://ld.nice.org.uk/prov/" )
+       ( "ld" ,"http://ld.nice.org.uk/" )
+       ( "dcterms" ,"http://purl.org/dc/terms/" )]
+      |> List.iter (fun (p,ns) ->
+                    g.NamespaceMap.AddNamespace (p,UriFactory.Create ns)
+      )
   let literal (g : IGraph) s = g.CreateLiteralNode s :> INode
   let uri (g : IGraph) u = UriFactory.Create u |> g.CreateUriNode :> INode
   let puri (g : IGraph) (u : Uri) = g.CreateUriNode(string u) :> INode

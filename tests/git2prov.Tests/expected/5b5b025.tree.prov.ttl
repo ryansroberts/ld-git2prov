@@ -5,10 +5,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix prov: <http://www.w3.org/ns/prov#>.
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
-@prefix git2prov: <http://ld.nice.org.uk/prov/>.
-@prefix base: <http://ld.nice.org.uk/prov>.
-@prefix ld: <http://ld.nice.org.uk/>.
 @prefix compilation: <http://ld.nice.org.uk/ns/compilation#>.
+@prefix git2prov: <http://ld.nice.org.uk/prov/>.
+@prefix ld: <http://ld.nice.org.uk/>.
+@prefix dcterms: <http://purl.org/dc/terms/>.
 
-<http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README> <http://ld.nice.org.uk/ns/compilation#tree> "5b5b025".
-<http://ld.nice.org.uk/prov/entity#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313:new.txt> <http://ld.nice.org.uk/ns/compilation#tree> "5b5b025".
+<http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README> <http://ld.nice.org.uk/ns/compilation#tree> <http://ld.nice.org.uk/prov/commit#5b5b025>.
+<http://ld.nice.org.uk/prov/entity#11F8AD13B4F875D3482479FB6936683D83F9268CC445EFE277964F1823939313:new.txt> <http://ld.nice.org.uk/ns/compilation#tree> <http://ld.nice.org.uk/prov/commit#5b5b025>.

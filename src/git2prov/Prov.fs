@@ -33,10 +33,13 @@ type Uri with
     Uri("git2prov", [ "user" ], Some System.Environment.UserName)
   static member versionedcontent (Commit c) p r =
     Uri("git2prov", [ "entity" ], Some((short c r) + ":" + p))
-  static member lastVersionAtPath  p r =
-    let (LogEntry l) = follow (Path p) r |> Seq.head
-    Uri("git2prov", [ "entity" ], Some((short l.Commit r) + ":" + p))
-
+  static member lastVersionAtPath (Commit c)  p r =
+    let xl = follow (Path p) r
+    if Seq.isEmpty xl then
+      Uri("git2prov", [ "entity" ], Some((short c r) + ":" + p))
+    else
+      let (LogEntry l ) = xl |> Seq.head
+      Uri("git2prov", [ "entity" ], Some((short l.Commit r) + ":" + p))
   static member workingAreaFile (f : LibGit2Sharp.StatusEntry) =
     Uri("git2prov", [ "workingarea" ], Some(sha f.FilePath))
   static member specialisationOf (r,p) =
@@ -60,7 +63,7 @@ and TreeFile = {
     seq {
         for f in (iterT t) do
         yield {
-            Id = Uri.lastVersionAtPath (f.Path) r
+            Id = Uri.lastVersionAtPath (Commit c) (f.Path) r
             Path = Path(f.Path)
             SpecialisationOf = Uri.specialisationOf (r, f.Path)
             Tree = Uri.commit r c

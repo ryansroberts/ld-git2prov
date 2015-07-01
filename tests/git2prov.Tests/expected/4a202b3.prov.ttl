@@ -19,7 +19,7 @@
                                                                        prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
                                                                        prov:hadRole "author, committer"];
                                             prov:startedAtTime "2010-05-24T10:19:04.000000-07:00"^^xsd:dateTime;
-                                            prov:uses <http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README>;
+                                            prov:uses <http://ld.nice.org.uk/prov/entity#4a202b3:README>;
                                             prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
 <http://ld.nice.org.uk/prov/compilation#38CCF6DA5A796C3AEFDD31D386100474C3C750A2E6F63A9A72616B5681B36317> a compilation:Compilation;
                                                                                                           rdfs:label """a third commit
@@ -28,12 +28,15 @@
                                                                                                           prov:qualifiedAssociation [a prov:Association ; 
                                                                                                                                      prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
                                                                                                                                      prov:hadRole "initiator"];
-                                                                                                          prov:startedAtTime "2015-06-30T10:29:45.545166+01:00"^^xsd:dateTime;
-                                                                                                          prov:uses <http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README>;
+                                                                                                          prov:startedAtTime "2015-07-01T11:49:06.025819+01:00"^^xsd:dateTime;
+                                                                                                          prov:uses <http://ld.nice.org.uk/prov/entity#4a202b3:README>;
                                                                                                           prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
-<http://ld.nice.org.uk/prov/entity#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900:README> compilation:content <http://raw/4a202b3:README>;
-                                                                                                            compilation:path "README";
-                                                                                                            a prov:Entity;
-                                                                                                            prov:specializationOf <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
+<http://ld.nice.org.uk/prov/entity#4a202b3:README> compilation:content <http://raw/4a202b3:README>;
+                                                   compilation:path "README";
+                                                   a prov:Entity;
+                                                   prov:specializationOf <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
+                                                   prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
+                                                   prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#4a202b3>.
+f <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                                                                             prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
                                                                                                             prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#4a202b3>.

@@ -45,9 +45,20 @@ let sameAs (a:Prov.Activity) (xs:Prov.TreeFile seq) =
    Translate.sameAs g x |> ignore
   g
 
+let existingProv path =
+  System.IO.Directory.EnumerateFiles (path,"*.prov.ttl")
+  |> Seq.map System.IO.Path.GetFileName
+  |> Seq.map (fun s -> s.Split([|'.'|]) |> Seq.head)
+  |> Set.ofSeq
+
 let writeProv path repo showHistory includeWorking since =
+  let existingProv = existingProv path
   let working = if includeWorking then seq {yield working repo} else Seq.empty 
-  let history = if showHistory then ( history repo since ) else Seq.empty
+  let history = if showHistory then
+                  history repo since
+                  |> Seq.filter (fun (a,_) ->
+                                 not(Set.contains (Option.get a.Hash ) existingProv))
+                else Seq.empty
 
   for (a,xs) in Seq.concat [working;history] do
     use hout = System.IO.File.OpenWrite (historyName path a)

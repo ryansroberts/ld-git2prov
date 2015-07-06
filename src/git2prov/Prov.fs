@@ -122,6 +122,7 @@ type FileVersion =
 type Activity =
   { Id : Uri
     Time : System.DateTimeOffset
+    Hash : string option
     Label : string
     User : Uri
     Used : FileVersion seq
@@ -129,6 +130,7 @@ type Activity =
   static member fromCommit r = function
     | Commit c ->
       { Id = Uri.commit r c
+        Hash = Some (short c r)
         Time = c.Author.When
         Label = c.Message
         User = Uri.identity c
@@ -138,12 +140,13 @@ type Activity =
   static member fromWorkingArea r = function
     | WorkingArea(wx, Commit c) ->
       { Id = Uri.workingarea
+        Hash = None
         Time = System.DateTimeOffset.Now
         Label = "Uncommitted changes from working area"
         User = Uri.identity()
         Used = FileVersion.from (wx, r)
         InformedBy = [ Uri.commit r c ] }
-  static member compilation a = 
+  static member compilation a =
       {a with
         Id = Uri.compilation (string a.Id)
         Time = System.DateTimeOffset.Now

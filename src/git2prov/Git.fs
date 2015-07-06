@@ -72,7 +72,7 @@ let diffs cx = function
   | Repository r -> cx |> Seq.map diff
 let branchName = function
   | Repository r ->
-    match r.Head.Name with
+    match r.Head.FriendlyName with
     | null -> r.Head.Tip.Sha
     | name -> name
 let workingDirectory = function

@@ -2,7 +2,7 @@ module Prov
 
 open Git
 open common.RDF
-
+open System.Collections.Generic
 let sha (s : string) =
   let alg = System.Security.Cryptography.SHA256.Create()
   alg.ComputeHash(System.Text.Encoding.UTF8.GetBytes s) |> ignore
@@ -12,6 +12,15 @@ let short sha = function
   | Repository r -> r.ObjectDatabase.ShortenObjectId sha
 let iso (date : System.DateTimeOffset) = date.ToString("o")
 let (++) a b = System.IO.Path.Combine(a, b)
+
+
+let d = Dictionary<_,_>()
+let memo =
+  (fun x f ->
+    let r = ref []
+    if(not(d.TryGetValue(x,r))) then f else !r)
+
+let follow p r = memo p (follow p r)
 
 let hashFor p r =
   let xs = follow (Path p) r
@@ -60,17 +69,15 @@ and TreeFile = {
       | LibGit2Sharp.TreeEntryTargetType.Tree -> yield! iterT (t'.Target :?> LibGit2Sharp.Tree)
       | _ -> ()
     }
-    seq {
-        for f in (iterT t) do
-        yield {
-            Id = Uri.lastVersionAtPath (Commit c) (f.Path) r
-            Path = Path(f.Path)
-            SpecialisationOf = Uri.specialisationOf (r, f.Path)
-            Tree = Uri.commit r c
-        }
-    }
+    [for f in (iterT t) do
+     yield {
+       Id = Uri.lastVersionAtPath (Commit c) (f.Path) r
+       Path = Path(f.Path)
+       SpecialisationOf = Uri.specialisationOf (r, f.Path)
+       Tree = Uri.commit r c}]
+
   static member fromWorkingArea r = function
-    | WorkingArea(wx, Commit c) -> seq {
+    | WorkingArea(wx, Commit c) -> [
       let working = [for w in wx do
                        yield {Id = Uri.workingAreaFile w
                               Path = Path(w.FilePath)
@@ -81,7 +88,7 @@ and TreeFile = {
       yield! working
       yield! TreeFile.from r (Commit c)
              |> Seq.filter notChangedInWorking
-     }
+     ]
 
 type FileVersion =
   { Id : Uri
@@ -93,9 +100,8 @@ type FileVersion =
     Commit : Uri
     AttributedTo : Uri } with
   static member from (Commit c, r) =
-    seq {
-      let d = diff (Commit c) r
-      for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
+    [let d = diff (Commit c) r
+     for f in Seq.concat [ d.Modified; d.Added; d.Renamed; d.Copied ] do
         yield { Id = Uri.versionedcontent (Commit c) (f.Path) r
                 Content = Git.content (short c r) (f.Path) r
                 Path = Path(f.Path)
@@ -103,8 +109,7 @@ type FileVersion =
                 SpecialisationOf = Uri.specialisationOf (r,f.Path)
                 Commit = Uri.commit r c
                 Time = c.Author.When
-                AttributedTo = Uri.identity c }
-    }
+                AttributedTo = Uri.identity c }]
 
   static member from (wx : LibGit2Sharp.StatusEntry list, r) =
     seq {

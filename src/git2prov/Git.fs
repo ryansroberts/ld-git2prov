@@ -50,7 +50,9 @@ let commits (since : string) r =
                                ||| CommitSortStrategies.Reverse))) -> Commit c
     }
 
-let follow (Path p) (Repository r) = r.Commits.QueryBy(p) |> Seq.map LogEntry
+let follow (Path p) (Repository r) =
+  r.Commits.QueryBy(p) |> Seq.map LogEntry |> Seq.toList
+
 let tree = function
   | Commit c -> (Tree c.Tree)
 let workingArea =

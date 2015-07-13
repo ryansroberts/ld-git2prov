@@ -80,3 +80,4 @@ let ttl (s : System.IO.FileStream) g =
   let writer =  CompressingTurtleWriter(WriterCompressionLevel.High)
   use tw = new System.IO.StreamWriter(s)
   writer.Save(g,tw)
+

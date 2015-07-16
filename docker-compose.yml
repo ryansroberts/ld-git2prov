@@ -1,0 +1,4 @@
+git2provdev:
+  image: nice/ld-docker-build
+  volumes: 
+    - ~/:/home/

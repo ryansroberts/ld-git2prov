@@ -15,7 +15,7 @@ type Arguments =
   interface IArgParserTemplate with
     member s.Usage =
       match s with
-      | Tree _ -> "sameAs statements for reachable resources at the specified version"
+      | Tree _ -> "treeAtCommit statements for reachable resources at the specified version"
       | IncludeWorkingArea _ -> "Include prov activity for uncommitted and staged "
       | ShowHistory -> "Include git history"
       | BaseUri s -> "Base uri for generated provenence"
@@ -36,13 +36,13 @@ let history r since =
    Git.commits since r
    |> Seq.map (fun c -> (Prov.Activity.fromCommit r c,Prov.TreeFile.from r c))
 
-let sameAs (a:Prov.Activity) (xs:Prov.TreeFile seq) =
+let treeAtCommit (a:Prov.Activity) (xs:Prov.TreeFile seq) =
   let g = new VDS.RDF.Graph()
   g.BaseUri <- System.Uri("http://ld.nice.org.uk/prov/tree#" + (Uri.fragment (a.Id)))
   RDF.ns.add (g, "http://ld.nice.org.uk/prov")
 
   for x in xs do
-   Translate.sameAs g x |> ignore
+   Translate.treeAtCommit g x |> ignore
   g
 
 let existingProv path =
@@ -53,7 +53,7 @@ let existingProv path =
 
 let writeProv path repo showHistory includeWorking since =
   let existingProv = existingProv path
-  let working = if includeWorking then seq {yield working repo} else Seq.empty 
+  let working = if includeWorking then seq {yield working repo} else Seq.empty
   let history = if showHistory then
                   history repo since
                   |> Seq.filter (fun (a,_) ->
@@ -70,10 +70,11 @@ let writeProv path repo showHistory includeWorking since =
     Translate.provCompilation g (Prov.Activity.compilation a)
     Translate.ttl hout g
 
-    sameAs a xs
+    printfn "%s" (Uri.fragment a.Id)
+
+    treeAtCommit a xs
     |> Translate.ttl tout
 
-    printfn "%s" (Uri.fragment a.Id)
   ()
 
 [<EntryPoint>]

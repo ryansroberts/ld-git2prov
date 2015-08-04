@@ -64,7 +64,7 @@ let provCompilation (g : IGraph) (act : Activity) =
   ()
 
 
-let sameAs (g:IGraph) (t : TreeFile) =
+let treeAtCommit (g:IGraph) (t : TreeFile) =
   let triples = triples g
   let puri = puri g
   let date = date g

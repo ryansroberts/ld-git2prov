@@ -1,40 +1,48 @@
 NUGET
   remote: https://nuget.org/api/v2
   specs:
-    dotNetRDF (1.0.7.3471)
+    dotNetRDF (1.0.9.3683)
       HtmlAgilityPack (>= 1.4.9) - framework: >= net35, >= net35, >= net40, >= net40
-      Newtonsoft.Json (>= 6.0.6) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
-      VDS.Common (1.4.0) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
-    FAKE (3.17.5)
-    FSharp.Compiler.Service (0.0.82)
-    FSharp.Core (3.1.2.1)
-    FSharp.Formatting (2.7.4)
-      FSharp.Compiler.Service (>= 0.0.82)
-      FSharpVSPowerTools.Core (>= 1.7.0)
-    FSharpVSPowerTools.Core (1.7.0)
-      FSharp.Compiler.Service (>= 0.0.81)
-    FsPickler (1.0.11)
+      Newtonsoft.Json (>= 6.0.8) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
+      VDS.Common (1.6.0) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
+    FAKE (4.1.3)
+    FSharp.Compiler.Service (1.4.0.1)
+    FSharp.Core (4.0.0.1)
+    FSharp.Formatting (2.10.0)
+      FSharp.Compiler.Service (>= 0.0.87)
+      FSharpVSPowerTools.Core (1.8.0)
+    FSharpVSPowerTools.Core (1.8.0)
+      FSharp.Compiler.Service (>= 0.0.87)
+    FsPickler (1.3.2)
     HtmlAgilityPack (1.4.9) - framework: >= net35, >= net35, >= net40, >= net40
-    Microsoft.Bcl (1.1.9)
+    Microsoft.Bcl (1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
     Microsoft.Bcl.Build (1.0.21)
-    Microsoft.Net.Http (2.2.28)
-      Microsoft.Bcl (>= 1.1.9)
+    Microsoft.Net.Http (2.2.29)
+      Microsoft.Bcl (>= 1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
-    Newtonsoft.Json (6.0.8)
-    NuGet.CommandLine (2.8.3)
+    Newtonsoft.Json (7.0.1) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
+    NuGet.CommandLine (2.8.6)
     NUnit.Runners (2.6.4)
-    Octokit (0.6.2)
+    Octokit (0.14.0)
       Microsoft.Net.Http
     openfilesystem (1.0.0.61263243)
-    SourceLink.Fake (0.4.2)
-    Suave (0.25.0)
-      FSharp.Core (>= 3.1.2.1)
-      FsPickler (>= 1.0.7)
-    UnionArgParser (0.8.6)
-    VDS.Common (1.4.0)
-    xunit (1.9.2)
-    xunit.runners (1.9.2)
+    SourceLink.Fake (1.0.0)
+    Suave (0.31.0)
+      FSharp.Core (>= 4.0.0.1)
+      FsPickler (>= 1.2.5)
+    UnionArgParser (0.9.0)
+    VDS.Common (1.6.0) - framework: portable-net40+sl40+win+wp80+MonoAndroid10+MonoTouch10, >= net35, >= net35, >= net40, >= net40
+    xunit (2.0.0)
+      xunit.assert (2.0.0)
+      xunit.core (2.0.0)
+    xunit.abstractions (2.0.0)
+    xunit.assert (2.0.0)
+    xunit.core (2.0.0)
+      xunit.extensibility.core (2.0.0)
+    xunit.extensibility.core (2.0.0)
+      xunit.abstractions (2.0.0)
+    xunit.runners (2.0.0)
 GITHUB
   remote: fsharp/FAKE
   specs:
@@ -42,4 +50,4 @@ GITHUB
       Octokit
   remote: nhsevidence/ld-mimir
   specs:
-    common/RDF.fs (08d26074feae5729a772aeb953ad7351049d4090)
+    common/RDF.fs (177f6707255d5dbddb9f5b85876c031a932fb726)

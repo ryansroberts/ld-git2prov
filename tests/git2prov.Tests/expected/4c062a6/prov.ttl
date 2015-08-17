@@ -28,7 +28,7 @@
                                                                                                           prov:qualifiedAssociation [a prov:Association ; 
                                                                                                                                      prov:agent <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com> ; 
                                                                                                                                      prov:hadRole "initiator"];
-                                                                                                          prov:startedAtTime "2015-07-01T11:49:06.213256+01:00"^^xsd:dateTime;
+                                                                                                          prov:startedAtTime "2015-08-17T10:24:17.020108+01:00"^^xsd:dateTime;
                                                                                                           prov:uses <http://ld.nice.org.uk/prov/entity#4c062a6:1/branch_file.txt>;
                                                                                                           prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com>.
 <http://ld.nice.org.uk/prov/entity#4c062a6:1/branch_file.txt> compilation:content <http://raw/4c062a6:1/branch_file.txt>;
@@ -37,6 +37,3 @@
                                                               prov:specializationOf <http://ld.nice.org.uk/resource#FEB4B406D96BAA0D0A39772B44D84A2E5826061CDB5959A1266151EA369F142C>;
                                                               prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com>;
                                                               prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#4c062a6>.
-urce#FEB4B406D96BAA0D0A39772B44D84A2E5826061CDB5959A1266151EA369F142C>;
-                                                                                                                       prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#gorbach.alexey@gmail.com>;
-                                                                                                                       prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#4c062a6>.

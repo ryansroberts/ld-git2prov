@@ -4,6 +4,7 @@ nuget FSharp.Formatting
 nuget NUnit.Runners
 nuget Nuget.CommandLine
 nuget FAKE
+nuget OpenFileSystem
 nuget SourceLink.Fake
 nuget UnionArgParser
 nuget DotNetRdf

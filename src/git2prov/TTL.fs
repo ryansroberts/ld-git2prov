@@ -76,7 +76,7 @@ let treeAtCommit (g:IGraph) (t : TreeFile) =
            [qn "compilation:inTree", puri t.Tree])
   ()
 
-let ttl (s : System.IO.FileStream) g =
+let ttl (s : System.IO.Stream) g =
   let writer =  CompressingTurtleWriter(WriterCompressionLevel.High)
   use tw = new System.IO.StreamWriter(s)
   writer.Save(g,tw)

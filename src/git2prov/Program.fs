@@ -4,6 +4,12 @@ open Nessos.UnionArgParser
 open common
 open common.RDF
 
+open OpenFileSystem.IO
+type FileSystem =
+  | FileSystem of IFileSystem
+  with static member unix () = FileSystem (new FileSystems.Local.Unix.UnixFileSystem ())
+
+
 type Arguments =
   | Tree of string
   | IncludeWorkingArea
@@ -25,8 +31,11 @@ type Arguments =
 
 let (++) a b = System.IO.Path.Combine (a,b)
 
-let historyName b (a:Prov.Activity) = b ++ (sprintf "%s.prov.ttl" (Uri.fragment a.Id))
-let treeName b (a:Prov.Activity) = b ++ (sprintf "%s.tree.prov.ttl" (Uri.fragment a.Id))
+let provDirectory (fs:IFileSystem) (p:string) (a:Prov.Activity) =
+  (fs.GetDirectory p).GetOrCreateDirectory (Uri.fragment a.Id)
+
+let historyFile (FileSystem fs) p a = (provDirectory fs p a).GetFile "prov.ttl"
+let treeFile (FileSystem fs) p a = (provDirectory fs p a).GetFile "tree.prov.ttl"
 
 let working r =
   let w = Git.workingArea r
@@ -45,14 +54,14 @@ let treeAtCommit (a:Prov.Activity) (xs:Prov.TreeFile seq) =
    Translate.treeAtCommit g x |> ignore
   g
 
-let existingProv path =
-  System.IO.Directory.EnumerateFiles (path,"*.prov.ttl")
-  |> Seq.map System.IO.Path.GetFileName
-  |> Seq.map (fun s -> s.Split([|'.'|]) |> Seq.head)
+let existingProv (FileSystem fs) path =
+  fs.GetDirectory(path)
+    .Directories("*",SearchScope.CurrentOnly)
+  |> Seq.map (fun p -> p.Name)
   |> Set.ofSeq
 
-let writeProv path repo showHistory includeWorking since =
-  let existingProv = existingProv path
+let writeProv fs path repo showHistory includeWorking since =
+  let existingProv = existingProv fs path
   let working = if includeWorking then seq {yield working repo} else Seq.empty
   let history = if showHistory then
                   history repo since
@@ -61,8 +70,8 @@ let writeProv path repo showHistory includeWorking since =
                 else Seq.empty
 
   for (a,xs) in Seq.concat [working;history] do
-    use hout = System.IO.File.OpenWrite (historyName path a)
-    use tout = System.IO.File.OpenWrite (treeName path a)
+    use hout = (historyFile fs path a).OpenWrite()
+    use tout = (treeFile fs path a).OpenWrite ()
     use g = new VDS.RDF.Graph()
     RDF.ns.add (g, "http://ld.nice.org.uk/prov")
 
@@ -76,6 +85,7 @@ let writeProv path repo showHistory includeWorking since =
     |> Translate.ttl tout
 
   ()
+
 
 [<EntryPoint>]
 let main argv =
@@ -98,5 +108,5 @@ let main argv =
   let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
   let output = args.GetResult(<@ Output @>, defaultValue = ".")
 
-  writeProv output repo showHistory includeWorking since
+  writeProv (FileSystem.unix ()) output repo showHistory includeWorking since
   0

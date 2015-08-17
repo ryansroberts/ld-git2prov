@@ -27,7 +27,7 @@
                                                                                                           prov:qualifiedAssociation [a prov:Association ; 
                                                                                                                                      prov:agent <http://ld.nice.org.uk/prov/user#schacon@gmail.com> ; 
                                                                                                                                      prov:hadRole "initiator"];
-                                                                                                          prov:startedAtTime "2015-07-01T11:49:05.946600+01:00"^^xsd:dateTime;
+                                                                                                          prov:startedAtTime "2015-08-17T10:24:16.866527+01:00"^^xsd:dateTime;
                                                                                                           prov:uses <http://ld.nice.org.uk/prov/entity#8496071:README>;
                                                                                                           prov:wasAssociatedWith <http://ld.nice.org.uk/prov/user#schacon@gmail.com>.
 <http://ld.nice.org.uk/prov/entity#8496071:README> compilation:content <http://raw/8496071:README>;
@@ -36,6 +36,3 @@
                                                    prov:specializationOf <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
                                                    prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
                                                    prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#8496071>.
-f <http://ld.nice.org.uk/resource#2B7814D3FCA2E99E56C51B6FF2AA313EA6E9DA6424804240AA8AD891FDFE0900>;
-                                                                                                            prov:wasAttributedTo <http://ld.nice.org.uk/prov/user#schacon@gmail.com>;
-                                                                                                            prov:wasGeneratedBy <http://ld.nice.org.uk/prov/commit#8496071>.

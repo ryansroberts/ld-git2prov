@@ -70,15 +70,15 @@ and TreeFile = {
       | LibGit2Sharp.TreeEntryTargetType.Tree -> yield! iterT (t'.Target :?> LibGit2Sharp.Tree)
       | _ -> ()
     }
-    [for f in (iterT t) do
-     yield {
-       Id = Uri.lastVersionAtPath (Commit c) (f.Path) r
-       Path = Path(f.Path)
-       SpecialisationOf = Uri.specialisationOf (r, f.Path)
-       Tree = Uri.commit r c}]
+    seq {for f in (iterT t) do
+         yield {
+            Id = Uri.lastVersionAtPath (Commit c) (f.Path) r
+            Path = Path(f.Path)
+            SpecialisationOf = Uri.specialisationOf (r, f.Path)
+            Tree = Uri.commit r c}}
 
   static member fromWorkingArea r = function
-    | WorkingArea(wx, Commit c) -> [
+    | WorkingArea(wx, Commit c) -> seq {
       let working = [for w in wx do
                        yield {Id = Uri.workingAreaFile w
                               Path = Path(w.FilePath)
@@ -89,7 +89,7 @@ and TreeFile = {
       yield! working
       yield! TreeFile.from r (Commit c)
              |> Seq.filter notChangedInWorking
-     ]
+     }
 
 type FileVersion =
   { Id : Uri

@@ -71,7 +71,6 @@ let writeProv fs path repo showTree showHistory includeWorking since =
 
   for (a,xs) in Seq.concat [working;history] do
     use hout = (historyFile fs path a).OpenWrite()
-    use tout = (treeFile fs path a).OpenWrite ()
     use g = new VDS.RDF.Graph()
     RDF.ns.add (g, "http://ld.nice.org.uk/prov")
 
@@ -82,9 +81,9 @@ let writeProv fs path repo showTree showHistory includeWorking since =
     printfn "%s" (Uri.fragment a.Id)
 
     if showTree then
+        use tout = (treeFile fs path a).OpenWrite ()
         treeAtCommit a xs
         |> Translate.ttl tout
-
   ()
 
 

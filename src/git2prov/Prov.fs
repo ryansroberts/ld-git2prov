@@ -31,6 +31,7 @@ let hashFor p r =
     sha l.Path
 
 
+
 type Uri with
   static member commit r c = Uri("git2prov", [ "commit" ], Some(short c r))
   static member compilation c =

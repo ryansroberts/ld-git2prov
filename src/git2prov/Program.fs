@@ -11,7 +11,7 @@ type FileSystem =
 
 
 type Arguments =
-  | Tree of string
+  | ShowTree
   | IncludeWorkingArea
   | ShowHistory
   | BaseUri of string
@@ -21,7 +21,7 @@ type Arguments =
   interface IArgParserTemplate with
     member s.Usage =
       match s with
-      | Tree _ -> "treeAtCommit statements for reachable resources at the specified version"
+      | ShowTree  -> "Tree statements for reachable resources at the specified version"
       | IncludeWorkingArea _ -> "Include prov activity for uncommitted and staged "
       | ShowHistory -> "Include git history"
       | BaseUri s -> "Base uri for generated provenence"
@@ -60,7 +60,7 @@ let existingProv (FileSystem fs) path =
   |> Seq.map (fun p -> p.Name)
   |> Set.ofSeq
 
-let writeProv fs path repo showHistory includeWorking since =
+let writeProv fs path repo showTree showHistory includeWorking since =
   let existingProv = existingProv fs path
   let working = if includeWorking then seq {yield working repo} else Seq.empty
   let history = if showHistory then
@@ -81,8 +81,9 @@ let writeProv fs path repo showHistory includeWorking since =
 
     printfn "%s" (Uri.fragment a.Id)
 
-    treeAtCommit a xs
-    |> Translate.ttl tout
+    if showTree then
+        treeAtCommit a xs
+        |> Translate.ttl tout
 
   ()
 
@@ -105,8 +106,9 @@ let main argv =
 
   let includeWorking = args.Contains(<@ IncludeWorkingArea @>)
   let showHistory = args.Contains(<@ ShowHistory @>)
+  let showTree = args.Contains(<@ ShowTree @>)
   let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
   let output = args.GetResult(<@ Output @>, defaultValue = ".")
 
-  writeProv (FileSystem.unix ()) output repo showHistory includeWorking since
+  writeProv (FileSystem.unix ()) output repo showTree showHistory includeWorking since
   0

@@ -51,7 +51,9 @@ let commits (since : string) r =
     }
 
 let follow (Path p) (Repository r) =
-  r.Commits.QueryBy(p) |> Seq.map LogEntry |> Seq.toList
+  let filter = FollowFilter ()
+  filter.SortBy <- CommitSortStrategies.Topological ||| CommitSortStrategies.Time
+  r.Commits.QueryBy(p,filter) |> Seq.map LogEntry |> Seq.toList
 
 let tree = function
   | Commit c -> (Tree c.Tree)

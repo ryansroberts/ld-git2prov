@@ -16,7 +16,8 @@ let provHistory (g : IGraph) (act : Activity) =
   let blank = blank g
   let literal = literal g
   triples (puri act.Id,
-           [ (a, qn "prov:Activity")
+           [ (a, qn "compilation:Commit")
+             (a, qn "prov:Activity")
              (qn "prov:startedAtTime", date act.Time)
              (qn "prov:endedAtTime", date act.Time)
              (qn "prov:wasAssociatedWith", puri act.User)
@@ -49,7 +50,8 @@ let provCompilation (g : IGraph) (act : Activity) =
   let blank = blank g
   let literal = literal g
   triples (puri act.Id,
-            [ (a, qn "compilation:Compilation")
+           [  (a, qn "compilation:Compilation")
+              (a, qn "prov:Activity")
               (qn "prov:startedAtTime", date act.Time)
               (qn "prov:wasAssociatedWith", puri act.User)
               (qn "rdfs:label", literal act.Label)

@@ -14,7 +14,7 @@ type Arguments =
   | ShowTree
   | IncludeWorkingArea
   | ShowHistory
-  | BaseUri of string
+  | ExistingProv of string
   | Path of string
   | Since of string
   | Output of string
@@ -23,8 +23,8 @@ type Arguments =
       match s with
       | ShowTree  -> "Tree statements for reachable resources at the specified version"
       | IncludeWorkingArea _ -> "Include prov activity for uncommitted and staged "
+      | ExistingProv _ -> "Location of stored prov"
       | ShowHistory -> "Include git history"
-      | BaseUri s -> "Base uri for generated provenence"
       | Path p -> "Path to a git repository"
       | Since r -> "Commit ref to generate PROV from"
       | Output o -> "Where to write graphs"
@@ -60,8 +60,8 @@ let existingProv (FileSystem fs) path =
   |> Seq.map (fun p -> p.Name)
   |> Set.ofSeq
 
-let writeProv fs path repo showTree showHistory includeWorking since =
-  let existingProv = existingProv fs path
+let writeProv fs existing path repo showTree showHistory includeWorking since =
+  let existingProv = existingProv fs existing
   let working = if includeWorking then seq {yield working repo} else Seq.empty
   let history = if showHistory then
                   history repo since
@@ -108,6 +108,7 @@ let main argv =
   let showTree = args.Contains(<@ ShowTree @>)
   let since = args.GetResult(<@ Since @>, defaultValue = "HEAD")
   let output = args.GetResult(<@ Output @>, defaultValue = ".")
+  let existing = args.GetResult(<@ ExistingProv @>, defaultValue = output)
 
-  writeProv (FileSystem.unix ()) output repo showTree showHistory includeWorking since
+  writeProv (FileSystem.unix ()) existing output repo showTree showHistory includeWorking since
   0
